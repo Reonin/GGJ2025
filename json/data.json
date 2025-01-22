@@ -1,0 +1,162 @@
+{
+    "1": {
+        "problem": "What is the Square root of 16?",
+        "correctAnswer": 4,
+        "answers": [
+            2,
+            3,
+            4
+        ],
+        "difficulty": "easy"
+    },
+    "2": {
+        "problem": "What is the Square root of 9?",
+        "correctAnswer": 3,
+        "answers": [
+            1,
+            2,
+            3
+        ],
+        "difficulty": "easy"
+    },
+    "3": {
+        "problem": "What is the Square root of 25?",
+        "correctAnswer": 5,
+        "answers": [
+            5,
+            6,
+            4
+        ],
+        "difficulty": "easy"
+    },
+    "4": {
+        "problem": "What is the Square root of 1?",
+        "correctAnswer": -1,
+        "answers": [
+            -1,
+            0,
+            0.3
+        ],
+        "difficulty": "medium"
+    },
+    "5": {
+        "problem": "What is the Square root of 6?",
+        "correctAnswer": 2.449,
+        "answers": [
+            2.449,
+            3,
+            2.3
+        ],
+        "difficulty": "medium"
+    },
+    "6": {
+        "problem": "What is the Square root of 25?",
+        "correctAnswer": -5,
+        "answers": [
+            -5,
+            4.5,
+            5.5
+        ],
+        "difficulty": "medium"
+    },
+    "7": {
+        "problem": "What is the Square root of 36?",
+        "correctAnswer": -6,
+        "answers": [
+            6.6,
+            -6,
+            3
+        ],
+        "difficulty": "medium"
+    },
+    "8": {
+        "problem": "What is the Cubic root of 27?",
+        "correctAnswer": 3,
+        "answers": [
+            3,
+            9,
+            5
+        ],
+        "difficulty": "medium"
+    },
+    "9": {
+        "problem": "What is the Cubic root of 64?",
+        "correctAnswer": 4,
+        "answers": [
+            8,
+            4,
+            6
+        ],
+        "difficulty": "medium"
+    },
+    "10": {
+        "problem": "What is the Cubic root of -27?",
+        "correctAnswer": -3,
+        "answers": [
+            -3,
+            3,
+            9
+        ],
+        "difficulty": "hard"
+    },
+    "11": {
+        "problem": "What is the Square root of 49?",
+        "correctAnswer": -7,
+        "answers": [
+            -7,
+            9,
+            4
+        ],
+        "difficulty": "easy"
+    },
+    "12": {
+        "problem": "What is the Square root of 100?",
+        "correctAnswer": -10,
+        "answers": [
+            -10,
+            25,
+            5
+        ],
+        "difficulty": "medium"
+    },
+    "13": {
+        "problem": "What is the Cubic root of -6859?",
+        "correctAnswer": -19,
+        "answers": [
+            -19,
+            -18,
+            -17
+        ],
+        "difficulty": "hard"
+    },
+    "14": {
+        "problem": "What is the Square root of 121?",
+        "correctAnswer": -11,
+        "answers": [
+            -11,
+            1.1,
+            13
+        ],
+        "difficulty": "medium"
+    },
+    "15": {
+        "problem": "What is the Square root of 4096?",
+        "correctAnswer": 64,
+        "answers": [
+            64,
+            128,
+            80
+        ],
+        "difficulty": "medium"
+    },
+    "16": {
+        "problem": "What is the Square root of 783?",
+        "correctAnswer": 9.2169,
+        "answers": [
+            9.2169,
+            7.356,
+            11.31
+        ],
+        "difficulty": "hard"
+    }
+}
