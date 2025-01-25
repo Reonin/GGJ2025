@@ -88,13 +88,10 @@ export function init() {
         audioManager = new AudioManager(BABYLON, scene);
 
         audioManager.loadSounds();
- 
+
         const assetsManager = new BABYLON.AssetsManager(scene);
         const meshTask1 = assetsManager.addMeshTask('seed-0 task', '', './models/', 'pistachio-0.glb');
-        const meshTask2 = assetsManager.addMeshTask('seed-1 task', '', './models/', 'pistachio-1.glb');
-        const meshTask3 = assetsManager.addMeshTask('seed-2 task', '', './models/', 'pistachio-2.glb');
-        const meshTask4 = assetsManager.addMeshTask('seed-3 task', '', './models/', 'pistachio-3.glb');
-        const meshTask5 = assetsManager.addMeshTask('seed-4 task', '', './models/', 'pistachio-4.glb');
+
         meshTask1.onSuccess = (task) => {
             const seedMesh = task.loadedMeshes[0];
             seedMesh.name = "seed0";
@@ -103,44 +100,9 @@ export function init() {
             seedMesh.position.y = 1;
             seedMesh.position.z = -0.25;
         }
-        meshTask2.onSuccess = (task) => {
-            const seedMesh = task.loadedMeshes[0];
-            seedMesh.name = "seed1";
-            // Do something with the mesh here
-            seedMesh.rotation = new BABYLON.Vector3(0, 0, 0);
-            seedMesh.rotation = new BABYLON.Vector3(-Math.PI / 2.2, 0, 0);
-            seedMesh.position.y = 1;
-            seedMesh.position.z = -0.25;
-        }
-        meshTask3.onSuccess = (task) => {
-            const seedMesh = task.loadedMeshes[0];
-            seedMesh.name = "seed2";
-            // Do something with the mesh here
-            seedMesh.rotation = new BABYLON.Vector3(0, 0, 0);
-            seedMesh.rotation = new BABYLON.Vector3(-Math.PI / 2.2, 0, 0);
-            seedMesh.position.y = 1;
-            seedMesh.position.z = -0.25;
-        }
 
-        meshTask4.onSuccess = (task) => {
-            const seedMesh = task.loadedMeshes[0];
-            seedMesh.name = "seed3";
-            // Do something with the mesh here
-            seedMesh.rotation = new BABYLON.Vector3(0, 0, 0);
-            seedMesh.rotation = new BABYLON.Vector3(-Math.PI / 2.2, 0, 0);
-            seedMesh.position.y = 1;
-            seedMesh.position.z = -0.25;
-        }
-
-        meshTask5.onSuccess = (task) => {
-            const seedMesh = task.loadedMeshes[0];
-            seedMesh.name = "seed4";
-            // Do something with the mesh here
-            seedMesh.rotation = new BABYLON.Vector3(0, 0, 0);
-            seedMesh.rotation = new BABYLON.Vector3(-Math.PI / 2.2, 0, 0);
-            seedMesh.position.y = 1;
-            seedMesh.position.z = -0.25;
-        }
+        // Create the bubble (a sphere)
+        //const bubble = MeshBuilder.CreateSphere("bubble", { diameter: 1 }, scene);
 
         assetsManager.load();
 
@@ -151,6 +113,45 @@ export function init() {
         HUD.player2.meshes = [
             {}, {}, {}
         ];
+
+        const bubble = BABYLON.MeshBuilder.CreateSphere("bubble", { diameter: .5 }, scene);
+
+        // Function to handle microphone input
+        async function handleMicrophoneInput() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const source = audioContext.createMediaStreamSource(stream);
+                const analyser = audioContext.createAnalyser();
+                analyser.fftSize = 256;
+                source.connect(analyser);
+
+                const dataArray = new Uint8Array(analyser.frequencyBinCount);
+                let currentScale = 1;
+
+                function updateBubbleSize() {
+                    analyser.getByteFrequencyData(dataArray);
+
+                    // Calculate average volume
+                    const average = dataArray.reduce((sum, value) => sum + value, 0) / dataArray.length;
+                    const targetScale = Math.min(50, Math.max(1, average / 10)); // Allow bigger scaling
+
+                    // Map the average volume to a scale for the bubble size
+                    currentScale += (targetScale - currentScale) * (targetScale > currentScale ? 0.02 : 0.005);
+
+                    bubble.scaling.set(currentScale, currentScale, currentScale);
+
+                }
+
+                // Update bubble size on every frame
+                scene.onBeforeRenderObservable.add(updateBubbleSize);
+            } catch (err) {
+                console.error("Microphone access denied or not supported.", err);
+            }
+        }
+
+        handleMicrophoneInput();
+
 
         for (let element = 0; element < HUD.player1.meshes.length; element++) {
             HUD.player1.meshes[element] = BABYLON.MeshBuilder.CreateDisc(`disc${element}`, { radius: 0.3 }, scene);
@@ -259,10 +260,6 @@ export function init() {
             //Watch the seedling grow based on the highest score
             if (seed0 !== undefined) {
                 seed0.setEnabled(false);
-                seed1.setEnabled(false);
-                seed2.setEnabled(false);
-                seed3.setEnabled(false);
-                seed4.setEnabled(false);
 
                 switch (Math.max(HUD.player1Score.text, HUD.player2Score.text)) {
                     case 0:
@@ -271,18 +268,6 @@ export function init() {
                         seed0.setEnabled(true);
                         break;
                     case 3:
-                        seed1.setEnabled(true);
-                        break;
-                    case 4:
-                        seed2.setEnabled(true);
-                        break;
-                    case 5:
-                        seed3.setEnabled(true);
-                        break;
-                    case 6:
-                        seed4.setEnabled(true);
-                        break;
-                    default:
                         break;
                 }
             }
@@ -365,16 +350,7 @@ export function init() {
             gameManager.changeRound(1, HUD, true);
 
             seed0 = scene.getMeshByName("seed0");
-            seed1 = scene.getMeshByName("seed1");
-            seed2 = scene.getMeshByName("seed2");
-            seed3 = scene.getMeshByName("seed3");
-            seed4 = scene.getMeshByName("seed4");
 
-            // seed0 is shown from the start
-            seed1.setEnabled(false);
-            seed2.setEnabled(false);
-            seed3.setEnabled(false);
-            seed4.setEnabled(false);
         });
 
         return scene;
@@ -395,124 +371,9 @@ export function init() {
                     case 'A':
                     case 'a':
                         console.log("KEY DOWN: ", kbInfo.event.key);
-
-                        if (!gameManager.player1IsLocked) {
-                            // Add the highlight layer.
-                            hl.addMesh(HUD.player1.meshes[0], BABYLON.Color3.Green());
-                            HUD.player1Score.text = gameManager.checkForCorrectAnswer(HUD.player1Score.text, HUD.player1.answer1.text, HUD, 'player1');
-                            if (HUD.player1Score.text < p1FullPaths.length) {
-                                p1Roots.push(p1FullPaths[HUD.player1Score.text]);
-                            } else {
-                                HUD.question.text = "Player one wins!";
-                                setTimeout(() => { location.reload();}, 10000);
-                            }
-
-                        }
-                        else {
-                            audioManager.error.stop();
-                            audioManager.error.play();
-                        }
-                        break;
-                    case 'S':
-                    case 's':
-                        if (!gameManager.player1IsLocked) {
-                            hl.addMesh(HUD.player1.meshes[1], BABYLON.Color3.Green());
-                            HUD.player1Score.text = gameManager.checkForCorrectAnswer(HUD.player1Score.text, HUD.player1.answer2.text, HUD, 'player1');
-                            console.log("KEY DOWN: ", kbInfo.event.key);
-                            if (HUD.player1Score.text < p1FullPaths.length) {
-                                p1Roots.push(p1FullPaths[HUD.player1Score.text]);
-                            } else {
-                                HUD.question.text = "Player one wins!";
-                                setTimeout(() => { location.reload();}, 10000);
-                            }
-                        }
-                        else {
-                            audioManager.error.stop();
-                            audioManager.error.play();
-                        }
-                        break;
-                    case 'D':
-                    case 'd':
-                        if (!gameManager.player1IsLocked) {
-                            console.log("KEY DOWN: ", kbInfo.event.key);
-                            hl.addMesh(HUD.player1.meshes[2], BABYLON.Color3.Green());
-                            HUD.player1Score.text = gameManager.checkForCorrectAnswer(HUD.player1Score.text, HUD.player1.answer3.text, HUD, 'player1');
-                            if (HUD.player1Score.text < p1FullPaths.length) {
-                                p1Roots.push(p1FullPaths[HUD.player1Score.text]);
-                            } else {
-                                HUD.question.text = "Player one wins!";
-                                setTimeout(() => { location.reload();}, 10000);
-
-                            }
-                        }
-                        else {
-                            audioManager.error.stop();
-                            audioManager.error.play();
-                        }
-                        break;
-
-                    case 'ArrowLeft':
-                        if (!gameManager.player2IsLocked) {
-                            console.log("KEY DOWN: ", kbInfo.event.key);
-                            hl.addMesh(HUD.player2.meshes[0], BABYLON.Color3.Green());
-                            HUD.player2Score.text = gameManager.checkForCorrectAnswer(HUD.player2Score.text, HUD.player2.answer1.text, HUD, 'player2');
-                            if (HUD.player2Score.text < p2FullPaths.length) {
-                                p2Roots.push(p2FullPaths[HUD.player2Score.text]);
-                            } else {
-                                HUD.question.text = "Player two wins!";
-                                setTimeout(() => { location.reload();}, 10000);
-                            }
-                        }
-                        else {
-                            audioManager.error.stop();
-                            audioManager.error.play();
-                        }
-
-                        break;
-                    case 'ArrowDown':
-                        if (!gameManager.player2IsLocked) {
-                            console.log("KEY DOWN: ", kbInfo.event.key);
-                            hl.addMesh(HUD.player2.meshes[1], BABYLON.Color3.Green());
-                            HUD.player2Score.text = gameManager.checkForCorrectAnswer(HUD.player2Score.text, HUD.player2.answer2.text, HUD, 'player2');
-                            if (HUD.player2Score.text < p2FullPaths.length) {
-                                p2Roots.push(p2FullPaths[HUD.player2Score.text]);
-                            } else {
-                                HUD.question.text = "Player two wins!";
-                                setTimeout(() => { location.reload();}, 10000);
-                            }
-                        }
-                        else {
-                            audioManager.error.stop();
-                            audioManager.error.play();
-                        }
-                        break;
-                    case 'ArrowRight':
-                        if (!gameManager.player2IsLocked) {
-                            console.log("KEY DOWN: ", kbInfo.event.key);
-                            hl.addMesh(HUD.player2.meshes[2], BABYLON.Color3.Green());
-                            HUD.player2Score.text = gameManager.checkForCorrectAnswer(HUD.player2Score.text, HUD.player2.answer3.text, HUD, 'player2');
-                            if (HUD.player2Score.text < p2FullPaths.length) {
-                                p2Roots.push(p2FullPaths[HUD.player2Score.text]);
-                            } else {
-                                HUD.question.text = "Player two wins!";
-                                setTimeout(() => { location.reload();}, 10000);
-                            }
-                        }
-                        else {
-                            audioManager.error.stop();
-                            audioManager.error.play();
-                        }
-                        break;
+                        seed0.position.x += 1;
 
                 }
-            }
-            else if (kbInfo.type == BABYLON.KeyboardEventTypes.KEYUP) {
-                HUD.player1.meshes.forEach(element => {
-                    hl.removeMesh(element);
-                });
-                HUD.player2.meshes.forEach(element => {
-                    hl.removeMesh(element);
-                });
             }
         });
 
