@@ -7,8 +7,10 @@ import { AudioManager } from './AudioManager.js';
 import {
     ScrollingBackground,
     updateScrollSpeed,
+    constrainToBoundaries
 } from "./InfiniteBackground.js";
 import { PointFactory } from './PointFactory.js';
+import { Germ } from './Germ.js'
 
 // import {changeRound, checkForCorrectAnswer} from './RoundSwap.js';
 let audioManager;
@@ -23,6 +25,7 @@ export function init() {
     let player2 = {};
     let correctAnswer;
     let currentRound = 0;
+    
 
     const buttonList = {
         startGameButton,
@@ -61,7 +64,9 @@ export function init() {
     let seed4;
 
     const createScene = async function () {
-        // // Creates a basic Babylon Scene object
+        //--------------------------CAMERA AND ENGIN SETUP--------------------------//
+        // -------------------------------------------------------------------------//
+        // // Creates a basic Babylon Scene object and engine stuff
         const scene = new BABYLON.Scene(engine);
         const camera = new BABYLON.UniversalCamera(
             "camera1",
@@ -79,13 +84,34 @@ export function init() {
             new BABYLON.Vector3(0, 1, -0.4),
             scene
         );
-        // // Dim the light a small amount - 0 to 1
-        // light.intensity = 0.5;
-
+   
+        // Enable camera collisions
+        camera.checkCollisions = true;
+        camera.ellipsoid = new BABYLON.Vector3(1, 1, 1);
+        // Dev controls
         camera.attachControl(canvas, true);
         camera.inputs.addMouseWheel();
 
-        //GUI
+        //---------------------------MAIN VARIABLES SETUP---------------------------//
+        // -------------------------------------------------------------------------//
+
+        bubble = BABYLON.MeshBuilder.CreateSphere("bubble", { diameter: .5 }, scene);
+        const background = ScrollingBackground(scene);
+        const boundaries = background.infiniteBackground.getBoundaries();
+  
+
+        //---------------------------'GLOABL' SCENE STUFF---------------------------//
+        // -------------------------------------------------------------------------//
+
+        scene.collisionsEnabled = true;
+        scene.onBeforeRenderObservable.add(() => {
+            constrainToBoundaries(bubble, boundaries);
+        });
+ 
+
+
+       //-------------------------------GUI SETUP-----------------------------------//
+       // --------------------------------------------------------------------------//
         advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI(
             "GUI",
             true,
@@ -102,6 +128,20 @@ export function init() {
         audioManager = new AudioManager(BABYLON, scene);
         pointFactory = new PointFactory(BABYLON, scene, textureObj);
         pointFactory.createMesh();
+        scene.registerBeforeRender(() => {
+            pointFactory.checkCollisions(bubble);
+        });
+        scene.onBeforeRenderObservable.add(() => {
+            const germs = pointFactory.getGerms()
+            console.log('here are germs XXXXXXXXXXXXXXXXXXXXXX ', germs)
+            for (const germ of germs){
+                constrainToBoundaries(germ.mesh, boundaries);
+            }
+            
+        });
+
+
+
 
         audioManager.loadSounds();
 
@@ -113,7 +153,7 @@ export function init() {
             "pistachio-0.glb"
         );
 
-        const background = ScrollingBackground(scene);
+
 
         meshTask1.onSuccess = (task) => {
             const seedMesh = task.loadedMeshes[0];
@@ -134,7 +174,9 @@ export function init() {
 
         HUD.player2.meshes = [{}, {}, {}];
 
-        bubble = BABYLON.MeshBuilder.CreateSphere("bubble", { diameter: .5 }, scene);
+        
+
+
 
         // Function to handle microphone input
         async function handleMicrophoneInput() {

@@ -2,6 +2,7 @@ class InfiniteBackground {
     instances = [];
     threshold;
     spawnPlace;
+    boundaries = {};
 
     constructor(mesh, scene) {
         this.speed = 0;
@@ -40,12 +41,33 @@ class InfiniteBackground {
     setScrollSpeed(newSpeed) {
         this.speed = newSpeed;
     }
+
+    getBoundaries() {
+        return this.boundaries;
+    }
 }
+
+
+// Function to constrain an object's movement within boundaries
+export const constrainToBoundaries = (object, boundaries) => {
+    if (object.position.x < boundaries.left) {
+        object.position.x = boundaries.left;
+    }
+    if (object.position.x > boundaries.right) {
+        object.position.x = boundaries.right;
+    }
+    if (object.position.y < boundaries.bottom) {
+        object.position.y = boundaries.bottom;
+    }
+    if (object.position.y > boundaries.top) {
+        object.position.y = boundaries.top;
+    }
+};
 
 export const ScrollingBackground = (scene) => {
     const background = BABYLON.MeshBuilder.CreatePlane(
         "plane",
-        { width: 40, height: 10 },
+        { width: 40, height: 15 },
         scene
     ); // Increase size if needed
     const backgroundMaterial = new BABYLON.StandardMaterial(

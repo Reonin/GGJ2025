@@ -1,4 +1,5 @@
 import { MESH_START_Z, MESH_START_Z2, MESH_START_Z3 } from './Constants.js';
+
 export class Germ {
     constructor(Babylon, scene, textureObj) {
       this.BABYLON = Babylon;
@@ -15,6 +16,7 @@ export class Germ {
       this.mesh.material = this.textureObj.germ_texture;
       this.mesh.rotation.z = 180;
       this.startPosition = this.randomizeStart();
+      this.mesh.checkCollisions = true;
       setInterval(this.positionMesh.bind(this), 10);
     }
 
@@ -55,6 +57,5 @@ export class Germ {
         }
        
       
-    }
-  
+    }  
   }
