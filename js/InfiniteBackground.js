@@ -12,7 +12,7 @@ class InfiniteBackground {
             mesh.getBoundingInfo().boundingBox.extendSize.x * 2;
 
         this.threshold =
-            mesh.position.x - mesh.getBoundingInfo().boundingBox.extendSize.x;
+            mesh.position.x + mesh.getBoundingInfo().boundingBox.extendSize.x;
         this.instances[1].position.x = this.spawnPlace;
 
         mesh.setEnabled(false);
@@ -21,13 +21,16 @@ class InfiniteBackground {
             const animationRatio = scene.getAnimationRatio();
 
             for (let i = 0; i < this.instances.length; i++) {
-                this.instances[i].position.x -= this.speed * animationRatio;
-                const rightEdge =
-                    this.instances[i].position.x +
+                this.instances[i].position.x += this.speed * animationRatio;
+
+                const leftEdge =
+                    this.instances[i].position.x -
                     mesh.getBoundingInfo().boundingBox.extendSize.x;
 
-                if (rightEdge <= this.threshold) {
-                    this.instances[i].position.x +=
+                // Check if the instance has moved beyond the threshold
+                if (leftEdge >= this.threshold) {
+                    // Move the instance to the far left to loop
+                    this.instances[i].position.x -=
                         mesh.getBoundingInfo().boundingBox.extendSize.x * 4;
                 }
             }
