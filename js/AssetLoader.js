@@ -29,7 +29,13 @@ export default function loadAssets(BABYLON, scene) {
     const bubble_texture = new BABYLON.StandardMaterial("bubble", scene);
     bubble_texture.diffuseTexture = new BABYLON.Texture(hostPath + "/textures/bubble.png", scene);
 
+    const urchin_texture = new BABYLON.StandardMaterial("urchin", scene);
+    urchin_texture.diffuseTexture = new BABYLON.Texture(hostPath + "/textures/urchin.png", scene);
+    urchin_texture.diffuseTexture.vScale = 1;
+    urchin_texture.diffuseTexture.uScale = 2;
+    urchin_texture.diffuseTexture.hasAlpha = true;
+    urchin_texture.useAlphaFromDiffuseTexture = true
 
-    const textureObj = { purple_mat, blue_mat, red_mat, brown_mat, soil_texture, germ_texture, bubble_texture };
+    const textureObj = { purple_mat, blue_mat, red_mat, brown_mat, soil_texture, germ_texture, bubble_texture, urchin_texture };
     return textureObj;
 }
