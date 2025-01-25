@@ -1,5 +1,5 @@
 import { BUTTON_ANSWER_X, BUTTON_ANSWER_Y, MESH_START_Z } from './Constants.js';
-
+import { Germ } from './Germ.js';
 export class PointFactory {
     constructor(Babylon, scene, textureObj) {
       this.BABYLON = Babylon;
@@ -8,55 +8,25 @@ export class PointFactory {
       this.listOfPointsActive = [];  
       this.direction = true;
       this.scene.onBeforeRenderObservable.add(this.checkAndDestroyStaleMeshes.bind(this));
+    //   this.scene.onAfterRenderObservable.add(this.createMesh.bind(this));
+    setInterval(this.createMesh.bind(this), 3000);
     }
 
     createMesh(){
-        const germ = this.BABYLON.MeshBuilder.CreateDisc("germ", { diameter: 2 }, this.scene);
-        germ.billboardMode = BABYLON.Mesh.BILLBOARDMODE_ALL;
-        germ.position.x = -10;
-        germ.position.y = 1.000;
-        germ.position.z = 5;
-        germ.material = this.textureObj.germ_texture;
-        germ.rotation.z = 180;
-        this.listOfPointsActive.push(germ);
-        setInterval(this.positionMesh.bind(this), 10);
+        // if(Math.random() > 0.99) { // experiment with delta time instead
+            const germ = new Germ(this.BABYLON, this.scene, this.textureObj);
+            this.listOfPointsActive.push(germ);
+          
+        // }
     }
   
-    positionMesh(mesh){
-        // debugger;
-        this.listOfPointsActive.forEach((mesh, index) => {
-            // Check if box is moving up
-            mesh.position.x += 0.0125;
-            if (mesh.position.z < MESH_START_Z + 0.5 && this.direction) {
-                // Increment box position to the up
-                mesh.position.z += 0.0125;
-            }
-            else {
-                // Swap directions to move down
-                this.direction = false;
-            }
-            // Check if box is moving down
-            if (mesh.position.z > MESH_START_Z - 0.5 && !this.direction) {
-                // Decrement box position to the down
-                mesh.position.z -= 0.0125;
-            }
-            else {
-                // Swap directions to move up
-                this.direction = true;
-            }
-
-        });
-    }
-
-    // destroyMesh(mesh){
-    //     mesh.dispose();
-    // }
+    
 
     checkAndDestroyStaleMeshes(){
-        this.listOfPointsActive?.forEach((mesh, index) => {
-            if(mesh.position.x > 8) {
-                console.log('destroy');
-                mesh.dispose();
+        this.listOfPointsActive?.forEach((obj, index) => {
+            //destroy if reaches arbitrary x end 
+            if(obj.mesh.position.x > 12) {
+                obj.mesh.dispose();
                 this.listOfPointsActive.splice(index, 1);
             }
         });

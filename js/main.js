@@ -122,6 +122,7 @@ export function init() {
             seedMesh.rotation = new BABYLON.Vector3(-Math.PI / 2.2, 0, 0);
             seedMesh.position.y = 1;
             seedMesh.position.z = -0.25;
+            seedMesh.isVisible = false;
         };
 
         // Create the bubble (a sphere)
@@ -222,7 +223,7 @@ export function init() {
         });
         HUD.player1Score.text = "0";
 
-        debugger;
+    
         buttonList.startGameButton.onPointerUpObservable.add(function () {
             updateScrollSpeed(background, 0.03);
             hideTitleScreen();
