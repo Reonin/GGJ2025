@@ -1,14 +1,12 @@
-import { BUTTON_ANSWER_X, BUTTON_ANSWER_Y, MESH_START_Z } from './Constants.js';
+import { BUTTON_ANSWER_X, BUTTON_ANSWER_Y } from './Constants.js';
 import setUpButtons from './buttonConfig.js';
 import setUpHUD from './HUDConfig.js';
 import loadAssets from './AssetLoader.js';
 import { GameManager } from './RoundSwap.js';
 import { AudioManager } from './AudioManager.js';
-import { PointFactory } from './PointFactory.js';
 
 // import {changeRound, checkForCorrectAnswer} from './RoundSwap.js';
 let audioManager;
-let pointFactory;
 export function init() {
 
     const canvas = document.getElementById("renderCanvas"); // Get the canvas element
@@ -49,6 +47,8 @@ export function init() {
     let textureObj;
     const gameManager = new GameManager();
 
+    let bubble;
+
 
     let seed0;
     let seed1;
@@ -81,8 +81,7 @@ export function init() {
         setUpButtons(advancedTexture, buttonList);
         setUpHUD(advancedTexture, HUD);
         audioManager = new AudioManager(BABYLON, scene);
-        pointFactory = new PointFactory(BABYLON, scene, textureObj);
-        pointFactory.createMesh();
+
         audioManager.loadSounds();
 
         const assetsManager = new BABYLON.AssetsManager(scene);
@@ -110,7 +109,7 @@ export function init() {
             {}, {}, {}
         ];
 
-        const bubble = BABYLON.MeshBuilder.CreateSphere("bubble", { diameter: .5 }, scene);
+        bubble = BABYLON.MeshBuilder.CreateSphere("bubble", { diameter: .5 }, scene);
 
         // Function to handle microphone input
         async function handleMicrophoneInput() {
@@ -124,8 +123,10 @@ export function init() {
 
                 const dataArray = new Uint8Array(analyser.frequencyBinCount);
                 let currentScale = 1;
+                let currentYPosition = 0;
+                let previousScale = currentScale;
 
-                function updateBubbleSize() {
+                async function updateBubbleSize() {
                     analyser.getByteFrequencyData(dataArray);
 
                     // Calculate average volume
@@ -133,9 +134,35 @@ export function init() {
                     const targetScale = Math.min(50, Math.max(1, average / 10)); // Allow bigger scaling
 
                     // Map the average volume to a scale for the bubble size
-                    currentScale += (targetScale - currentScale) * (targetScale > currentScale ? 0.02 : 0.005);
+                    currentScale += (targetScale - currentScale) * (targetScale > currentScale ? 0.009 : 0.009);
 
+                    // Check if the bubble is growing or shrinking
+                    const isGrowing = currentScale > previousScale;
+                    if (isGrowing) {
+                        bubble.position.z -= .01;
+                        console.log(`The bubble is growing! Its position is ${bubble.position.z}`);
+                    } else if (currentScale < previousScale) {
+                        if(bubble.position.z <= 5 && currentScale < 9){
+                            bubble.position.z += .01;
+                            console.log(`The bubble is shrinking! Its position is ${bubble.position.z}`);
+                        }
+                    }
+
+                    previousScale = currentScale;
+
+                    // Update the bubble size
                     bubble.scaling.set(currentScale, currentScale, currentScale);
+
+                    console.log(`Scale is ${currentScale}`);
+                    // Move the bubble up or down based on size
+                    //const targetYPosition = (currentScale - 1) * 2; // Scale height movement proportionally to bubble size
+                    //currentYPosition += (targetYPosition - currentYPosition) * .1; // Smoothly transition vertical position
+
+                    //bubble.position.z = currentYPosition; // Update bubble's vertical position
+
+                    // Log the bubble diameter
+                    const diameter = currentScale * bubble.getBoundingInfo().boundingBox.extendSize.x * 2;
+                    //console.log(`Bubble diameter: ${diameter}`);
 
                 }
 
@@ -148,7 +175,7 @@ export function init() {
 
         handleMicrophoneInput();
 
-    
+
 
         const directionArr1 = [true, true, true];
         const directionArr2 = [true, true, true];
@@ -161,11 +188,11 @@ export function init() {
 
         });
 
-        
+
         HUD.player1.meshes.forEach(element => {
             element.material = textureObj.blue_mat;
         });
-        HUD.player1Score.text = '0'; 
+        HUD.player1Score.text = '0';
 
         // Built-in 'ground' shape.
         const ground = BABYLON.MeshBuilder.CreateGround("ground", { width: 20, height: 14 }, scene);
@@ -203,12 +230,7 @@ export function init() {
                     case 'a':
                         console.log("KEY DOWN: ", kbInfo.event.key);
                         seed0.position.x += 1;
-                    break;
-                    case '`':
-                        scene.debugLayer.show();
-                    break;
 
-                       
                 }
             }
         });
