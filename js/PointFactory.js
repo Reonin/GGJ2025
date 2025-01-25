@@ -31,5 +31,9 @@ export class PointFactory {
             }
         });
     }
+
+    getGerms(){
+        return this.listOfPointsActive
+    }
   
   }

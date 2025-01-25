@@ -145,7 +145,31 @@ export function init() {
 
         HUD.player2.meshes = [{}, {}, {}];
 
+
         bubble = BABYLON.MeshBuilder.CreateSphere("bubble", { diameter: .5 }, scene);
+        // Enable collision system for the scene
+        scene.collisionsEnabled = true;
+
+        // Enable collision for the bubble
+        bubble.checkCollisions = true;
+
+        // Optionally, set an ellipsoid to represent the collision volume (default is a sphere)
+        bubble.ellipsoid = new BABYLON.Vector3(0.25, 0.25, 0.25); // Adjust to fit the mesh size
+        bubble.ellipsoidOffset = new BABYLON.Vector3(0, 0.25, 0); // Offset the ellipsoid if needed
+
+
+        scene.registerBeforeRender(() => {
+            const germs = pointFactory.getGerms()
+            for(const germ of germs){
+                console.log(germs)
+                if (bubble.intersectsMesh(germ.mesh, false)) { // Check collision with the ground
+                    console.log("Collision detected between bubble and germ");
+                }
+            }
+        });
+
+
+        
         bubble.material = textureObj.bubble_texture;
 
         // Function to handle microphone input
