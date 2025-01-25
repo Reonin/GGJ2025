@@ -17,7 +17,17 @@ let pointFactory;
 export function init() {
     const canvas = document.getElementById("renderCanvas"); // Get the canvas element
     const engine = new BABYLON.Engine(canvas, true, { stencil: true }); // Generate the BABYLON 3D engine
-
+    BABYLON.Engine.audioEngine.useCustomUnlockedButton = true;
+    // Unlock audio on first user interaction.
+    window.addEventListener(
+        "click",
+        () => {
+        if (!BABYLON.Engine.audioEngine.unlocked) {
+            BABYLON.Engine.audioEngine.unlock();
+        }
+        },
+        { once: true },
+    );
     let advancedTexture;
     let startGameButton;
     let player1 = {};
@@ -140,7 +150,7 @@ export function init() {
 
         // Function to handle microphone input
 
-        handleMicrophoneInput(scene, bubble);
+        handleMicrophoneInput(scene, bubble, audioManager);
 
 
 

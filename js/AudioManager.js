@@ -20,10 +20,27 @@ export class AudioManager {
       volume: 0.15,
     });
 
-    this.warmPiano = new this.BABYLON.Sound("WarmPiano", "./audio/warm-piano.mp3", this.scene, null, {
+    this.warmPiano = new this.BABYLON.Sound("WarmPiano", "./audio/deep-underwater.mp3", this.scene, null, {
       loop: true,
       autoplay: true,
-      volume: 0.3,
+      volume: 0.2,
+    });
+
+    this.bubbleUpFX = new this.BABYLON.Sound("bubp", "./audio/bubbleup.wav", this.scene, null, {
+      loop: false,
+      autoplay: false,
+      volume: 0.75,
+    });
+    this.bubbleDownFX = new this.BABYLON.Sound("bubd", "./audio/bubbledown.wav", this.scene, null, {
+      loop: false,
+      autoplay: false,
+      volume: 0.75,
+    });
+
+    this.popFX = new this.BABYLON.Sound("pop", "./audio/pop.mp3", this.scene, null, {
+      loop: false,
+      autoplay: false,
+      volume: 0.15,
     });
 
     this.error = new this.BABYLON.Sound("error", "./audio/error.mp3", this.scene, null, {

@@ -1,4 +1,4 @@
-export default async function handleMicrophoneInput(scene, bubble) {
+export default async function handleMicrophoneInput(scene, bubble, audioManager) {
     try {
         const stream = await navigator.mediaDevices.getUserMedia({
             audio: true,
@@ -15,6 +15,10 @@ export default async function handleMicrophoneInput(scene, bubble) {
         const MAX_SCALE = 5; // Adjust as needed
         let currentScale = 1;
         let previousScale = currentScale;
+        let isAudioPlaying = true;
+        let timeReset = setInterval(() => {
+            isAudioPlaying = true;
+          }, 1000);
 
         function getPitch(dataArray) {
             // Find the index with the highest amplitude
@@ -54,10 +58,18 @@ export default async function handleMicrophoneInput(scene, bubble) {
             if (currentScale > previousScale) {
                 if(bubble.position.z >= -3){
                     bubble.position.z -= 0.02; // Move forward when growing
+                    if(isAudioPlaying){
+                        audioManager.bubbleUpFX.play();
+                        isAudioPlaying = false;
+                    }
                 }
             } else if (currentScale < previousScale) {
                 if(bubble.position.z <= 3 && currentScale < 7){
                     bubble.position.z += 0.02; // Move backward when shrinking
+                    if(isAudioPlaying) {
+                        audioManager.bubbleDownFX.play();
+                        isAudioPlaying = false;
+                    }
                 }
             }
 
