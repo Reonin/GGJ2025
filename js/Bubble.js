@@ -1,4 +1,4 @@
-export default async function handleMicrophoneInput(scene, bubble) {
+export default async function handleMicrophoneInput(scene, bubble, audioManager) {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({
                     audio: true,
@@ -14,6 +14,11 @@ export default async function handleMicrophoneInput(scene, bubble) {
                 let currentScale = 1;
                 let currentYPosition = 0;
                 let previousScale = currentScale;
+                
+                let isAudioPlaying = true;
+                let timeReset = setInterval(() => {
+                    isAudioPlaying = true;
+                  }, 1000);
 
                 async function updateBubbleSize() {
                     analyser.getByteFrequencyData(dataArray);
@@ -31,10 +36,18 @@ export default async function handleMicrophoneInput(scene, bubble) {
                     const isGrowing = currentScale > previousScale;
                     if (isGrowing) {
                         bubble.position.z -= .02;
+                        if(isAudioPlaying){
+                            audioManager.bubbleUpFX.play();
+                            isAudioPlaying = false;
+                        }
                         console.log(`The bubble is growing! Its position is ${bubble.position.z}`);
                     } else if (currentScale < previousScale) {
                         if(bubble.position.z <= 3 && currentScale < 7){
                             bubble.position.z += .02;
+                            if(isAudioPlaying) {
+                            audioManager.bubbleDownFX.play();
+                            isAudioPlaying = false;
+                        }
                             console.log(`The bubble is shrinking! Its position is ${bubble.position.z}`);
                         }
                     }
