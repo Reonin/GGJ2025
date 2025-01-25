@@ -26,7 +26,10 @@ export default function loadAssets(BABYLON, scene) {
     const germ_texture = new BABYLON.StandardMaterial("germ", scene);
     germ_texture.diffuseTexture = new BABYLON.Texture(hostPath + "/textures/germ.png", scene);
 
+    const bubble_texture = new BABYLON.StandardMaterial("bubble", scene);
+    bubble_texture.diffuseTexture = new BABYLON.Texture(hostPath + "/textures/bubble.png", scene);
 
-    const textureObj = { purple_mat, blue_mat, red_mat, brown_mat, soil_texture, germ_texture };
+
+    const textureObj = { purple_mat, blue_mat, red_mat, brown_mat, soil_texture, germ_texture, bubble_texture };
     return textureObj;
 }
