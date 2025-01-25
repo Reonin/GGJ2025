@@ -29,12 +29,12 @@ export class AudioManager {
     this.bubbleUpFX = new this.BABYLON.Sound("bubp", "./audio/bubbleup.wav", this.scene, null, {
       loop: false,
       autoplay: false,
-      volume: 1,
+      volume: 0.75,
     });
     this.bubbleDownFX = new this.BABYLON.Sound("bubd", "./audio/bubbledown.wav", this.scene, null, {
       loop: false,
       autoplay: false,
-      volume: 1,
+      volume: 0.75,
     });
 
     this.popFX = new this.BABYLON.Sound("pop", "./audio/pop.mp3", this.scene, null, {
