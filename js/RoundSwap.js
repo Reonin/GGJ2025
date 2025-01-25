@@ -19,14 +19,6 @@ export class GameManager {
 
         HUD.question.text = item.problem;
 
-        HUD.player1.answer1.text = item.answers[0];
-        HUD.player2.answer1.text = item.answers[2];
-
-        HUD.player1.answer2.text = item.answers[1];
-        HUD.player2.answer2.text = item.answers[1];
-
-        HUD.player1.answer3.text = item.answers[2];
-        HUD.player2.answer3.text = item.answers[0];
 
         HUD.correctAnswer = item.correctAnswer;
 
