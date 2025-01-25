@@ -23,6 +23,10 @@ export default function loadAssets(BABYLON, scene) {
     const soil_texture = new BABYLON.StandardMaterial("soil", scene);
     soil_texture.diffuseTexture = new BABYLON.Texture(hostPath + "/textures/soil.png", scene);
 
-    const textureObj = { purple_mat, blue_mat, red_mat, brown_mat, soil_texture };
+    const germ_texture = new BABYLON.StandardMaterial("germ", scene);
+    germ_texture.diffuseTexture = new BABYLON.Texture(hostPath + "/textures/germ.png", scene);
+
+
+    const textureObj = { purple_mat, blue_mat, red_mat, brown_mat, soil_texture, germ_texture };
     return textureObj;
 }

@@ -1,12 +1,14 @@
-import { BUTTON_ANSWER_X, BUTTON_ANSWER_Y, BUTTON_ANSWER_Z } from './Constants.js';
+import { BUTTON_ANSWER_X, BUTTON_ANSWER_Y, MESH_START_Z } from './Constants.js';
 import setUpButtons from './buttonConfig.js';
 import setUpHUD from './HUDConfig.js';
 import loadAssets from './AssetLoader.js';
 import { GameManager } from './RoundSwap.js';
 import { AudioManager } from './AudioManager.js';
+import { PointFactory } from './PointFactory.js';
 
 // import {changeRound, checkForCorrectAnswer} from './RoundSwap.js';
 let audioManager;
+let pointFactory;
 export function init() {
 
     const canvas = document.getElementById("renderCanvas"); // Get the canvas element
@@ -79,7 +81,8 @@ export function init() {
         setUpButtons(advancedTexture, buttonList);
         setUpHUD(advancedTexture, HUD);
         audioManager = new AudioManager(BABYLON, scene);
-
+        pointFactory = new PointFactory(BABYLON, scene, textureObj);
+        pointFactory.createMesh();
         audioManager.loadSounds();
 
         const assetsManager = new BABYLON.AssetsManager(scene);
@@ -200,7 +203,12 @@ export function init() {
                     case 'a':
                         console.log("KEY DOWN: ", kbInfo.event.key);
                         seed0.position.x += 1;
+                    break;
+                    case '`':
+                        scene.debugLayer.show();
+                    break;
 
+                       
                 }
             }
         });
