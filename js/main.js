@@ -26,7 +26,6 @@ export function init() {
     let player1Score = {},
         player2Score = {},
         scoreLabel1 = {},
-        scoreLabel2 = {},
         title = {},
         subtitle = {},
         question = {};
@@ -39,7 +38,6 @@ export function init() {
         player1Score,
         player2Score,
         scoreLabel1,
-        scoreLabel2,
         title,
         subtitle,
         question,
@@ -49,11 +47,6 @@ export function init() {
     let textureObj;
     const gameManager = new GameManager();
 
-
-    let p1Roots;
-    let p1FullPaths;
-    let p2Roots;
-    let p2FullPaths;
 
     let seed0;
     let seed1;
@@ -152,34 +145,7 @@ export function init() {
 
         handleMicrophoneInput();
 
-
-        for (let element = 0; element < HUD.player1.meshes.length; element++) {
-            HUD.player1.meshes[element] = BABYLON.MeshBuilder.CreateDisc(`disc${element}`, { radius: 0.3 }, scene);
-            HUD.player1.meshes[element].position.x = BUTTON_ANSWER_X - element * 1.15;
-            HUD.player1.meshes[element].position.y = BUTTON_ANSWER_Y;
-            HUD.player1.meshes[element].position.z = BUTTON_ANSWER_Z - (element * 0.25);
-            HUD.player1.meshes[element].id = `answer${element}`;
-            HUD.player1.meshes[element].billboardMode = BABYLON.Mesh.BILLBOARDMODE_ALL;
-        };
-
-        for (let element = 0; element < HUD.player2.meshes.length; element++) {
-            HUD.player2.meshes[element] = BABYLON.MeshBuilder.CreateDisc(`disc${element}`, { radius: 0.3 }, scene);
-            HUD.player2.meshes[element].position.x = BUTTON_ANSWER_X - element * 1.2 - 6; //Magic number bs make const
-            HUD.player2.meshes[element].position.y = BUTTON_ANSWER_Y;
-            HUD.player2.meshes[element].position.z = BUTTON_ANSWER_Z - (element * 0.25);
-            HUD.player2.meshes[element].id = `P2answer${element}`;
-            HUD.player2.meshes[element].billboardMode = BABYLON.Mesh.BILLBOARDMODE_ALL;
-        };
-
-
-        HUD.player1.answer1.linkWithMesh(HUD.player1.meshes[0]);
-        HUD.player1.answer2.linkWithMesh(HUD.player1.meshes[1]);
-        HUD.player1.answer3.linkWithMesh(HUD.player1.meshes[2]);
-
-        HUD.player2.answer1.linkWithMesh(HUD.player2.meshes[0]);
-        HUD.player2.answer2.linkWithMesh(HUD.player2.meshes[1]);
-        HUD.player2.answer3.linkWithMesh(HUD.player2.meshes[2]);
-
+    
 
         const directionArr1 = [true, true, true];
         const directionArr2 = [true, true, true];
@@ -189,152 +155,14 @@ export function init() {
         // Code in this function will run ~60 times per second
         scene.registerBeforeRender(() => {
 
-            HUD.player1.meshes.forEach((but, index) => {
-                let oldVal = directionArr1[index];
-
-                // Check if box is moving up
-                if (but.position.z < BUTTON_ANSWER_Z + 0.5 && directionArr1[index]) {
-                    // Increment box position to the up
-                    but.position.z += 0.0125;
-                }
-                else {
-                    // Swap directions to move down
-                    directionArr1[index] = false;
-
-                }
-                // Check if box is moving down
-                if (but.position.z > BUTTON_ANSWER_Z - 0.5 && !directionArr1[index]) {
-                    // Decrement box position to the down
-                    but.position.z -= 0.0125;
-                }
-                else {
-                    // Swap directions to move up
-                    directionArr1[index] = true;
-                }
-
-                if ((oldVal !== directionArr1[index]) && (gameManager.roundNumber > 0)) {
-                    audioManager.softFX.play();
-                }
-            });
-
-            HUD.player2.meshes.forEach((but, index) => {
-                // let oldVal = directionArr1[index];
-                // Check if box is moving up
-                if (but.position.z < BUTTON_ANSWER_Z + 0.5 && directionArr2[index]) {
-                    // Increment box position to the up
-                    but.position.z += 0.0125;
-                }
-                else {
-                    // Swap directions to move down
-                    directionArr2[index] = false;
-                }
-                // Check if box is moving down
-                if (but.position.z > BUTTON_ANSWER_Z - 0.5 && !directionArr2[index]) {
-                    // Decrement box position to the down
-                    but.position.z -= 0.0125;
-                }
-                else {
-                    // Swap directions to move up
-                    directionArr2[index] = true;
-                }
-
-            });
-            if (linesystem) {
-                linesystem.dispose();
-                linesystem2.dispose();
-            }
-            linesystem = BABYLON.MeshBuilder.CreateLineSystem("linesystem", { lines: p1Roots, updatable: true }, scene);
-            linesystem.color = new BABYLON.Color3(0.824, 0.706, 0.549);
-
-            linesystem2 = BABYLON.MeshBuilder.CreateLineSystem("linesystem2", { lines: p2Roots, updatable: true }, scene);
-            linesystem2.color = new BABYLON.Color3(0.824, 0.706, 0.549);
-
-            linesystem.enableEdgesRendering();
-            linesystem.edgesWidth = 3;
-            linesystem.edgesColor = new BABYLON.Color4(0.824, 0.706, 0.549, 1);
-
-            linesystem2.enableEdgesRendering();
-            linesystem2.edgesWidth = 3;
-            linesystem2.edgesColor = new BABYLON.Color4(0.824, 0.706, 0.549, 1);
-
-            //Watch the seedling grow based on the highest score
-            if (seed0 !== undefined) {
-                seed0.setEnabled(false);
-
-                switch (Math.max(HUD.player1Score.text, HUD.player2Score.text)) {
-                    case 0:
-                    case 1:
-                    case 2:
-                        seed0.setEnabled(true);
-                        break;
-                    case 3:
-                        break;
-                }
-            }
 
         });
 
-        p1Roots = [
-            [new BABYLON.Vector3(0, 1, 0),
-            new BABYLON.Vector3(0, 1, 1) //init
-            ]
-        ];
-
-        p1FullPaths = [
-            [new BABYLON.Vector3(0, 1, 0),
-            new BABYLON.Vector3(0, 1, 1) //init
-            ],
-            [
-                new BABYLON.Vector3(0, 1, 1),
-                new BABYLON.Vector3(1, 1, 1.5), //diag
-            ],
-            [new BABYLON.Vector3(1, 1, 1.5),
-            new BABYLON.Vector3(6.5, 1, 1.5), //left
-            ],
-            [new BABYLON.Vector3(6.5, 1, 1.5),
-            new BABYLON.Vector3(6.5, 1, 5.5),//down
-            ],
-            [new BABYLON.Vector3(6.5, 1, 5.5),
-            new BABYLON.Vector3(2, 1, 5.5), //right
-            ],
-            [new BABYLON.Vector3(2, 1, 5.5),
-            new BABYLON.Vector3(2, 1, 1.5), //up
-            ]];
-
-        p2Roots = [
-            [new BABYLON.Vector3(0, 1, 0),
-            new BABYLON.Vector3(0, 1, 1) //init
-            ]
-        ];
-        //mirror of the player 1 roots
-        p2FullPaths = [
-            [new BABYLON.Vector3(0, 1, 0),
-            new BABYLON.Vector3(0, 1, 1) //init
-            ],
-            [
-                new BABYLON.Vector3(0, 1, 1),
-                new BABYLON.Vector3(-1, 1, 1.5), //diag
-            ],
-            [new BABYLON.Vector3(-1, 1, 1.5),
-            new BABYLON.Vector3(-6.5, 1, 1.5), //right
-            ],
-            [new BABYLON.Vector3(-6.5, 1, 1.5),
-            new BABYLON.Vector3(-6.5, 1, 5.5),//down
-            ],
-            [new BABYLON.Vector3(-6.5, 1, 5.5),
-            new BABYLON.Vector3(-2, 1, 5.5), //left
-            ],
-            [new BABYLON.Vector3(-2, 1, 5.5),
-            new BABYLON.Vector3(-2, 1, 1.5), //up
-            ]];
-
-
+        
         HUD.player1.meshes.forEach(element => {
             element.material = textureObj.blue_mat;
         });
-        HUD.player2.meshes.forEach(element => {
-            element.material = textureObj.red_mat;
-        });
+        HUD.player1Score.text = '0'; 
 
         // Built-in 'ground' shape.
         const ground = BABYLON.MeshBuilder.CreateGround("ground", { width: 20, height: 14 }, scene);
