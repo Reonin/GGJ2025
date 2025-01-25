@@ -1,13 +1,9 @@
-import {
-    BUTTON_ANSWER_X,
-    BUTTON_ANSWER_Y,
-    BUTTON_ANSWER_Z,
-} from "./Constants.js";
-import setUpButtons from "./buttonConfig.js";
-import setUpHUD from "./HUDConfig.js";
-import loadAssets from "./AssetLoader.js";
-import { GameManager } from "./RoundSwap.js";
-import { AudioManager } from "./AudioManager.js";
+import { BUTTON_ANSWER_X, BUTTON_ANSWER_Y } from './Constants.js';
+import setUpButtons from './buttonConfig.js';
+import setUpHUD from './HUDConfig.js';
+import loadAssets from './AssetLoader.js';
+import { GameManager } from './RoundSwap.js';
+import { AudioManager } from './AudioManager.js';
 import {
     ScrollingBackground,
     updateScrollSpeed,
@@ -52,6 +48,9 @@ export function init() {
 
     let textureObj;
     const gameManager = new GameManager();
+
+    let bubble;
+
 
     let seed0;
     let seed1;
@@ -130,11 +129,7 @@ export function init() {
 
         HUD.player2.meshes = [{}, {}, {}];
 
-        const bubble = BABYLON.MeshBuilder.CreateSphere(
-            "bubble",
-            { diameter: 0.5 },
-            scene
-        );
+        bubble = BABYLON.MeshBuilder.CreateSphere("bubble", { diameter: .5 }, scene);
 
         // Function to handle microphone input
         async function handleMicrophoneInput() {
@@ -151,8 +146,10 @@ export function init() {
 
                 const dataArray = new Uint8Array(analyser.frequencyBinCount);
                 let currentScale = 1;
+                let currentYPosition = 0;
+                let previousScale = currentScale;
 
-                function updateBubbleSize() {
+                async function updateBubbleSize() {
                     analyser.getByteFrequencyData(dataArray);
 
                     // Calculate average volume
@@ -162,15 +159,36 @@ export function init() {
                     const targetScale = Math.min(50, Math.max(1, average / 10)); // Allow bigger scaling
 
                     // Map the average volume to a scale for the bubble size
-                    currentScale +=
-                        (targetScale - currentScale) *
-                        (targetScale > currentScale ? 0.02 : 0.005);
+                    currentScale += (targetScale - currentScale) * (targetScale > currentScale ? 0.009 : 0.009);
 
-                    bubble.scaling.set(
-                        currentScale,
-                        currentScale,
-                        currentScale
-                    );
+                    // Check if the bubble is growing or shrinking
+                    const isGrowing = currentScale > previousScale;
+                    if (isGrowing) {
+                        bubble.position.z -= .01;
+                        console.log(`The bubble is growing! Its position is ${bubble.position.z}`);
+                    } else if (currentScale < previousScale) {
+                        if(bubble.position.z <= 5 && currentScale < 9){
+                            bubble.position.z += .01;
+                            console.log(`The bubble is shrinking! Its position is ${bubble.position.z}`);
+                        }
+                    }
+
+                    previousScale = currentScale;
+
+                    // Update the bubble size
+                    bubble.scaling.set(currentScale, currentScale, currentScale);
+
+                    console.log(`Scale is ${currentScale}`);
+                    // Move the bubble up or down based on size
+                    //const targetYPosition = (currentScale - 1) * 2; // Scale height movement proportionally to bubble size
+                    //currentYPosition += (targetYPosition - currentYPosition) * .1; // Smoothly transition vertical position
+
+                    //bubble.position.z = currentYPosition; // Update bubble's vertical position
+
+                    // Log the bubble diameter
+                    const diameter = currentScale * bubble.getBoundingInfo().boundingBox.extendSize.x * 2;
+                    //console.log(`Bubble diameter: ${diameter}`);
+
                 }
 
                 // Update bubble size on every frame
@@ -184,6 +202,8 @@ export function init() {
         }
 
         handleMicrophoneInput();
+
+
 
         const directionArr1 = [true, true, true];
         const directionArr2 = [true, true, true];
