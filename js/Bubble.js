@@ -1,81 +1,86 @@
 export default async function handleMicrophoneInput(scene, bubble, audioManager) {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({
-                    audio: true,
-                });
-                const audioContext = new (window.AudioContext ||
-                    window.webkitAudioContext)();
-                const source = audioContext.createMediaStreamSource(stream);
-                const analyser = audioContext.createAnalyser();
-                analyser.fftSize = 256;
-                source.connect(analyser);
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+            audio: true,
+        });
+        const audioContext = new (window.AudioContext ||
+            window.webkitAudioContext)();
+        const source = audioContext.createMediaStreamSource(stream);
+        const analyser = audioContext.createAnalyser();
+        analyser.fftSize = 2048; // Increased for more precise frequency analysis
+        source.connect(analyser);
 
-                const dataArray = new Uint8Array(analyser.frequencyBinCount);
-                let currentScale = 1;
-                let currentYPosition = 0;
-                let previousScale = currentScale;
-                
-                let isAudioPlaying = true;
-                let timeReset = setInterval(() => {
-                    isAudioPlaying = true;
-                  }, 1000);
+        const dataArray = new Uint8Array(analyser.frequencyBinCount);
+        const MIN_SCALE = 0.5;
+        const MAX_SCALE = 5; // Adjust as needed
+        let currentScale = 1;
+        let previousScale = currentScale;
+        let isAudioPlaying = true;
+        let timeReset = setInterval(() => {
+            isAudioPlaying = true;
+          }, 1000);
 
-                async function updateBubbleSize() {
-                    analyser.getByteFrequencyData(dataArray);
-
-                    // Calculate average volume
-                    const average =
-                        dataArray.reduce((sum, value) => sum + value, 0) /
-                        dataArray.length;
-                    const targetScale = Math.min(50, Math.max(1, average / 10)); // Allow bigger scaling
-
-                    // Map the average volume to a scale for the bubble size
-                    currentScale += (targetScale - currentScale) * (targetScale > currentScale ? 0.009 : 0.009);
-
-                    // Check if the bubble is growing or shrinking
-                    const isGrowing = currentScale > previousScale;
-                    if (isGrowing) {
-                        bubble.position.z -= .02;
-                        if(isAudioPlaying){
-                            audioManager.bubbleUpFX.play();
-                            isAudioPlaying = false;
-                        }
-                        console.log(`The bubble is growing! Its position is ${bubble.position.z}`);
-                    } else if (currentScale < previousScale) {
-                        if(bubble.position.z <= 3 && currentScale < 7){
-                            bubble.position.z += .02;
-                            if(isAudioPlaying) {
-                            audioManager.bubbleDownFX.play();
-                            isAudioPlaying = false;
-                        }
-                            console.log(`The bubble is shrinking! Its position is ${bubble.position.z}`);
-                        }
-                    }
-
-                    previousScale = currentScale;
-
-                    // Update the bubble size
-                    bubble.scaling.set(currentScale, currentScale, currentScale);
-
-                    console.log(`Scale is ${currentScale}`);
-                    // Move the bubble up or down based on size
-                    //const targetYPosition = (currentScale - 1) * 2; // Scale height movement proportionally to bubble size
-                    //currentYPosition += (targetYPosition - currentYPosition) * .1; // Smoothly transition vertical position
-
-                    //bubble.position.z = currentYPosition; // Update bubble's vertical position
-
-                    // Log the bubble diameter
-                    const diameter = currentScale * bubble.getBoundingInfo().boundingBox.extendSize.x * 2;
-                    //console.log(`Bubble diameter: ${diameter}`);
-
+        function getPitch(dataArray) {
+            // Find the index with the highest amplitude
+            let highestIndex = 0;
+            let highestAmplitude = 0;
+            for (let i = 0; i < dataArray.length; i++) {
+                if (dataArray[i] > highestAmplitude) {
+                    highestAmplitude = dataArray[i];
+                    highestIndex = i;
                 }
-
-                // Update bubble size on every frame
-                scene.onBeforeRenderObservable.add(updateBubbleSize);
-            } catch (err) {
-                console.error(
-                    "Microphone access denied or not supported.",
-                    err
-                );
             }
+
+            // Convert index to approximate frequency
+            return (highestIndex * audioContext.sampleRate) / (2 * analyser.frequencyBinCount);
         }
+
+        function updateBubbleSize() {
+            analyser.getByteFrequencyData(dataArray);
+
+            // Get the pitch
+            const pitch = getPitch(dataArray);
+
+
+            let targetScale = currentScale;
+            if (pitch > 1000) { // High pitch
+                targetScale = Math.min(MAX_SCALE, currentScale * 1.05);
+            } else if (pitch < 300) { // Low pitch
+                targetScale = Math.max(MIN_SCALE, currentScale * 0.95);
+            }
+            // Smoothly update scale
+            currentScale += (targetScale - currentScale) * 0.1;
+
+            // Update bubble size
+            bubble.scaling.set(currentScale, currentScale, currentScale);
+
+            // Adjust z-position based on size
+            if (currentScale > previousScale) {
+                if(bubble.position.z >= -3){
+                    bubble.position.z -= 0.02; // Move forward when growing
+                    if(isAudioPlaying){
+                        audioManager.bubbleUpFX.play();
+                        isAudioPlaying = false;
+                    }
+                }
+            } else if (currentScale < previousScale) {
+                if(bubble.position.z <= 3 && currentScale < 7){
+                    bubble.position.z += 0.02; // Move backward when shrinking
+                    if(isAudioPlaying) {
+                        audioManager.bubbleDownFX.play();
+                        isAudioPlaying = false;
+                    }
+                }
+            }
+
+            previousScale = currentScale;
+
+            console.log(`Pitch: ${pitch.toFixed(2)}, Scale: ${currentScale.toFixed(2)}`);
+        }
+
+        // Update bubble size on every frame
+        scene.onBeforeRenderObservable.add(updateBubbleSize);
+    } catch (err) {
+        console.error("Microphone access denied or not supported.", err);
+    }
+}
