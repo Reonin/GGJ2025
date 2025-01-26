@@ -13,10 +13,7 @@
 
 ## Screenshots
 
-![](https://ggj.s3.amazonaws.com/styles/game_sidebar__wide/featured_image/2023/02/6385/main_screen.jpg?itok=OCYSPpNB&timestamp=1675667167 "Game Title")
-
-![](https://s3-us-west-1.amazonaws.com/ggj/site/site-images/GGJ00-Badge-Template-900x900.png "GGJ ")
-
+![ggj25_start](https://github.com/user-attachments/assets/ba383ad5-2888-4843-90cf-d73c7355b6cc)
 
 
 ## Available Commands
