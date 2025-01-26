@@ -12,12 +12,14 @@ export class Germ {
       this.speedZ = Math.random() * 0.02 + 0.01; //
 
 
-      this.mesh = this.BABYLON.MeshBuilder.CreateSphere("germ", {diameter:.5, updatable: true}, scene);
+      this.mesh = this.BABYLON.MeshBuilder.CreateSphere("germ", {diameter: .75, updatable: true}, scene);
 
       this.mesh.billboardMode = this.BABYLON.Mesh.BILLBOARDMODE_ALL;
       this.mesh.position.x = -10; // Start on the right
       //this.mesh.position.y = 1.000;
       this.mesh.position.z = 5;
+      this.mesh.rotation.x = Math.PI/2;
+      this.mesh.rotation.z = Math.PI/2;
       this.mesh.material = this.textureObj.germ_texture;
       this.mesh.position.z = this.randomizeStart(); // Randomized start along the z-axis      this.mesh.checkCollisions = true;
       this.startPosition = this.randomizeStart();

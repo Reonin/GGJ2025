@@ -61,8 +61,17 @@ export const ScrollingBackground = (scene) => {
     background.rotation.x = Math.PI / 2;
     background.rotation.y = Math.PI;
 
+    let hostPath;
+
+    if(location.hostname === "localhost"){
+        hostPath = '.';
+    }
+    else {
+        hostPath = '/GGJ2025/';
+    }
+    
     backgroundMaterial.diffuseTexture = new BABYLON.Texture(
-        "https://i.imgur.com/74u1cfx.png",
+        hostPath + "/textures/74u1cfx.png",
         scene
     );
     background.material = backgroundMaterial;
