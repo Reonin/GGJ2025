@@ -1,4 +1,4 @@
-export default async function handleMicrophoneInput(scene, bubble, audioManager) {
+export default async function handleMicrophoneInput(scene, bubble, audioManager, face, textureObj) {
     try {
         const stream = await navigator.mediaDevices.getUserMedia({
             audio: true,
@@ -67,6 +67,7 @@ export default async function handleMicrophoneInput(scene, bubble, audioManager)
                     if(isAudioPlaying){
                         audioManager.bubbleUpFX.play();
                         isAudioPlaying = false;
+                        face.material = textureObj.face_blow_texture;
                     }
                 }
             } else if (currentScale < previousScale) {
@@ -75,6 +76,7 @@ export default async function handleMicrophoneInput(scene, bubble, audioManager)
                     if(isAudioPlaying) {
                         audioManager.bubbleDownFX.play();
                         isAudioPlaying = false;
+                        face.material = textureObj.happy_blow_texture;
                     }
                 }
             }
