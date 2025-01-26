@@ -16,7 +16,6 @@ export class Shark extends Obstacle {
             //billboard : BABYLON.Mesh.BILLBOARDMODE_NONE,
             texture : textureObj.shark_texture
         });
-        console.log(`Shark created!`);
         this.mesh.rotation.z = 0;
         this.mesh.rotation.y = 0;
         this.mesh.rotation.x = 0;
