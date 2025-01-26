@@ -80,6 +80,12 @@ export function init() {
             new BABYLON.Vector3(0, 15, 0),
             scene
         );
+        const cameraZoom  = 15; 
+        camera.mode = BABYLON.Camera.ORTHOGRAPHIC_CAMERA;
+        camera.orthoTop = cameraZoom / 2 ;
+        camera.orthoBottom = -cameraZoom / 2;
+        camera.orthoLeft = -cameraZoom;
+        camera.orthoRight = cameraZoom;
         // Targets the camera to scene origin
         camera.setTarget(BABYLON.Vector3.Zero());
         // // This attaches the camera to the canvas
