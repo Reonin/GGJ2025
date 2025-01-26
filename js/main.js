@@ -151,17 +151,29 @@ export function init() {
             if (collisionCooldown < 30) return; // Frame cooldown
 
             scene.meshes.forEach((m) => {
-                if (bubble !== m && bubble.intersectsMesh(m, true) && m.name === 'germ' && m !== lastCollidedGerm) {
-                    console.log("Collision detected between bubble and germ");
+                if (
+                    bubble !== m &&
+                    bubble.intersectsMesh(m, true) &&
+                    (m.name === "germ" || m.name === "oilSpill") &&
+                    m !== lastCollidedGerm
+                ) {
                     lastCollidedGerm = m;
                     collisionCooldown = 0;
-                    score += 1;
+                    if (m.name === "germ") {
+                        score += 1;
+                    }
+                    if(m.name === "oilSpill"){
+                        score += 2;
+                    }
                     HUD.player1Score.text = score;
                     m.dispose();
                     audioManager.pingFX.play();
-                }
-                else if (bubble !== m && bubble.intersectsMesh(m, true) && (m.name === 'urchin' || m.name === 'shark') && m !== lastCollidedGerm) {
-                    console.log("Collision btwn bubble and obstacle");
+                } else if (
+                    bubble !== m &&
+                    bubble.intersectsMesh(m, true) &&
+                    (m.name === "urchin" || m.name === "shark") &&
+                    m !== lastCollidedGerm
+                ) {
                     lastCollidedGerm = m;
                     collisionCooldown = 0;
                     showGameOverScreen();
@@ -169,7 +181,6 @@ export function init() {
                     isGameOver = true;
                     bubble.isVisible = false;
                 }
-
             }, 100);
         })
 

@@ -46,6 +46,11 @@ export default function loadAssets(BABYLON, scene) {
     shark_texture.diffuseTexture.hasAlpha = true;
     shark_texture.useAlphaFromDiffuseTexture = true;
 
-    const textureObj = { purple_mat, blue_mat, red_mat, brown_mat, soil_texture, germ_texture, bubble_texture, urchin_texture, shark_texture};
+    const oil_spill_texture = new BABYLON.StandardMaterial("oil", scene);
+    oil_spill_texture.diffuseTexture = new BABYLON.Texture(hostPath + "/textures/oil.png", scene);
+    oil_spill_texture.diffuseTexture.hasAlpha = true;
+    oil_spill_texture.useAlphaFromDiffuseTexture = true;
+
+    const textureObj = { purple_mat, blue_mat, red_mat, brown_mat, soil_texture, germ_texture, bubble_texture, urchin_texture, shark_texture, oil_spill_texture};
     return textureObj;
 }
