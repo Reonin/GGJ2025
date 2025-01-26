@@ -43,10 +43,16 @@ export default async function handleMicrophoneInput(scene, bubble, audioManager)
 
 
             let targetScale = currentScale;
-            if (pitch > 1000) { // High pitch
+            if (pitch > 1000 && pitch < 1400) { // High pitch
                 targetScale = Math.min(MAX_SCALE, currentScale * 1.05);
-            } else if (pitch < 300) { // Low pitch
+            } else if (pitch < 300 && pitch > 150) { // Low pitch
                 targetScale = Math.max(MIN_SCALE, currentScale * 0.95);
+            } else if (pitch > 1400 && bubble.position.z >= -5) {
+                targetScale = Math.min(MAX_SCALE, currentScale * 1.05);
+                bubble.position.z -= .01;
+            } else if (pitch < 200 && bubble.position.z <= 5) {
+                targetScale = Math.max(MIN_SCALE, currentScale * 0.95);
+                bubble.position.z += .01;
             }
             // Smoothly update scale
             currentScale += (targetScale - currentScale) * 0.1;
@@ -56,7 +62,7 @@ export default async function handleMicrophoneInput(scene, bubble, audioManager)
 
             // Adjust z-position based on size
             if (currentScale > previousScale) {
-                if(bubble.position.z >= -3){
+                if(bubble.position.z >= -5){
                     bubble.position.z -= 0.02; // Move forward when growing
                     if(isAudioPlaying){
                         audioManager.bubbleUpFX.play();
@@ -64,7 +70,7 @@ export default async function handleMicrophoneInput(scene, bubble, audioManager)
                     }
                 }
             } else if (currentScale < previousScale) {
-                if(bubble.position.z <= 3 && currentScale < 7){
+                if(bubble.position.z <= 5 && currentScale < 7){
                     bubble.position.z += 0.02; // Move backward when shrinking
                     if(isAudioPlaying) {
                         audioManager.bubbleDownFX.play();
