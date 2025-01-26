@@ -104,9 +104,6 @@ export function init() {
         setUpButtons(advancedTexture, buttonList);
         setUpHUD(advancedTexture, HUD);
         audioManager = new AudioManager(BABYLON, scene);
-       
-     
-
         audioManager.loadSounds();
 
         const assetsManager = new BABYLON.AssetsManager(scene);
@@ -118,8 +115,33 @@ export function init() {
 
         HUD.player1.meshes = [{}, {}, {}];
 
-
+          // Water
+        const waterMesh = BABYLON.Mesh.CreateGround("waterMesh", 128, 64, 32, scene, false);
+        waterMesh.position = new BABYLON.Vector3(0, -4.522517204284668, 0);
+        // var gizmoManager = new BABYLON.GizmoManager(scene);
+        // gizmoManager.positionGizmoEnabled = true;
+        // gizmoManager.attachableMeshes = [waterMesh];
+        // waterMesh.isVisible = false;
         bubble = BABYLON.MeshBuilder.CreateSphere("bubble", { diameter: .5 }, scene);
+
+        // textureObj.water.addToRenderList(bubble);
+        // textureObj.water.addToRenderList(background);
+        
+        setInterval(() => {
+            if (!isGameStarted) return;
+
+            collisionCooldown++;
+
+            if (collisionCooldown < 30) return; // Frame cooldown
+
+            // scene.meshes.forEach((m) => {
+                textureObj.water.renderList = null;
+            // }, 5000);
+        }, 1000)
+
+        // Assign the water material
+        waterMesh.material = textureObj.water;
+        
         bubble.position.x = 5;
         scene.registerBeforeRender(() => {
             bubble.rotation.x += 0.02;
@@ -184,7 +206,7 @@ export function init() {
             isGameStarted = true;
             pointFactory = new PointFactory(BABYLON, scene, textureObj);
             obstacleFactory = new ObstacleFactory(BABYLON, scene, textureObj);
-
+            waterMesh.isVisible = true;
         });
 
         return scene;

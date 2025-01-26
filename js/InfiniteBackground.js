@@ -44,7 +44,7 @@ class InfiniteBackground {
 
 export const ScrollingBackground = (scene) => {
     const background = BABYLON.MeshBuilder.CreatePlane(
-        "plane",
+        "scrollingBG",
         { width: 40, height: 16.9 },
         scene
     ); // Increase size if needed

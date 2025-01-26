@@ -29,15 +29,36 @@ export default function loadAssets(BABYLON, scene) {
     const bubble_texture = new BABYLON.StandardMaterial("bubble", scene);
     bubble_texture.alpha = 0.85;
     bubble_texture.diffuseTexture = new BABYLON.Texture(hostPath + "/textures/bubble.png", scene);
-
+    bubble_texture.diffuseTexture.uScale = bubble_texture.diffuseTexture.vScale = 4;
 
     const urchin_texture = new BABYLON.StandardMaterial("urchin", scene);
     urchin_texture.diffuseTexture = new BABYLON.Texture(hostPath + "/textures/urchin.png", scene);
-    urchin_texture.diffuseTexture.vScale = 1;
-    urchin_texture.diffuseTexture.uScale = 2;
-    urchin_texture.diffuseTexture.hasAlpha = true;
-    urchin_texture.useAlphaFromDiffuseTexture = true
+    // urchin_texture.diffuseTexture.vScale = 1;
+    // urchin_texture.diffuseTexture.uScale = 2;
+    bubble_texture.diffuseTexture.uScale = bubble_texture.diffuseTexture.vScale = 4;
 
-    const textureObj = { purple_mat, blue_mat, red_mat, brown_mat, soil_texture, germ_texture, bubble_texture, urchin_texture };
+    urchin_texture.diffuseTexture.hasAlpha = true;
+    urchin_texture.useAlphaFromDiffuseTexture = true;
+
+
+	var water = new BABYLON.WaterMaterial("water", scene);
+	water.bumpTexture = new BABYLON.Texture("textures/waterbump.png", scene);
+	
+	// Water properties
+	water.windForce = -15;
+	water.waveHeight = 0.3;
+	water.windDirection = new BABYLON.Vector2(1, 1);
+	water.waterColor = new BABYLON.Color3(0.1, 0.1, 0.6);
+	water.colorBlendFactor = 0.3;
+	water.bumpHeight = 0.1;
+	water.waveLength = 1;
+	
+	// Add skybox and ground to the reflection and refraction
+	// water.addToRenderList(germ_texture);
+	// water.addToRenderList(bubble_texture);
+    // water.addToRenderList(urchin_texture);
+    
+
+    const textureObj = { purple_mat, blue_mat, red_mat, brown_mat, soil_texture, germ_texture, bubble_texture, urchin_texture, water };
     return textureObj;
 }
