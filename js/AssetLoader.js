@@ -57,10 +57,25 @@ export default function loadAssets(BABYLON, scene) {
     const shark_texture = new BABYLON.StandardMaterial("shark", scene);
     shark_texture.diffuseTexture = new BABYLON.Texture(hostPath + "/textures/shark.png", scene);
     //shark_texture.diffuseTexture.vScale = 1;
+    //shark_texture.uOffset = 2;
+    //shark_texture.vOffset = -0.3;
     //shark_texture.diffuseTexture.uScale = -1;
     shark_texture.diffuseTexture.hasAlpha = true;
     shark_texture.useAlphaFromDiffuseTexture = true;
 
-    const textureObj = { purple_mat, blue_mat, red_mat, brown_mat, soil_texture, germ_texture, bubble_texture, urchin_texture, shark_texture, face_texture, face_blow_texture, happy_blow_texture};
+    const oil_spill_texture = new BABYLON.StandardMaterial("oil", scene);
+    oil_spill_texture.diffuseTexture = new BABYLON.Texture(hostPath + "/textures/oil.png", scene);
+    oil_spill_texture.diffuseTexture.hasAlpha = true;
+    oil_spill_texture.useAlphaFromDiffuseTexture = true;
+
+    const hook_texture = new BABYLON.StandardMaterial("hook", scene);
+    hook_texture.diffuseTexture = new BABYLON.Texture(hostPath + "/textures/hook.png", scene);
+    hook_texture.vOffset = 5;
+    //hook_texture.diffuseTexture.vScale = .8;
+    //hook_texture.diffuseTexture.uScale = .8;
+    hook_texture.diffuseTexture.hasAlpha = true;
+    hook_texture.useAlphaFromDiffuseTexture = true;
+
+    const textureObj = { purple_mat, blue_mat, red_mat, brown_mat, soil_texture, germ_texture, bubble_texture, urchin_texture, shark_texture, hook_texture, oil_spill_texture, face_texture, face_blow_texture, happy_blow_texture};
     return textureObj;
 }

@@ -15,8 +15,6 @@ export class GameManager {
         const randomIndex = keys[Math.floor(Math.random() * keys.length)];
         const item = this.QuestionData[randomIndex];
 
-        console.log(this.QuestionData)
-
         HUD.question.text = item.problem;
 
 
@@ -67,7 +65,6 @@ export class GameManager {
     }
 
     changeRound(number, HUD, shouldILoadData = false) {
-        console.log(number);
         this.player1IsLocked = false;
         this.player2IsLocked = false;
 
@@ -87,7 +84,6 @@ export class GameManager {
             return Number(playerScore) + 1;
 
         } else {
-            console.log("%cWrong Answer!!!", "color:red");
             this.lockOutInputTemporarily(whichPlayer);
             return Number(playerScore);
         }
