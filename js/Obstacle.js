@@ -10,13 +10,10 @@ export class Obstacle {
 
         this.mesh = this.BABYLON.MeshBuilder.CreateSphere("obstacle", { diameter: 2 }, this.scene);
         this.mesh.billboardMode = this.BABYLON.Mesh.BILLBOARDMODE_ALL;
-        this.mesh.position.x = -10;
-        this.mesh.position.y = 1.000;
+        this.mesh.position.x = -15;
+        this.mesh.position.y = 0;
         this.mesh.position.z = 3;
         this.mesh.material = this.textureObj.urchin_texture;
-        //this.mesh.rotation.x = 45;
-        //this.mesh.rotation.y = -45;
-        //this.mesh.rotation.z = 180;
         setInterval(this.positionObstacle.bind(this), 10);
     }
 

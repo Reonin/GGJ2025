@@ -27,7 +27,9 @@ export default function loadAssets(BABYLON, scene) {
     germ_texture.diffuseTexture = new BABYLON.Texture(hostPath + "/textures/germ.png", scene);
 
     const bubble_texture = new BABYLON.StandardMaterial("bubble", scene);
+    bubble_texture.alpha = 0.85;
     bubble_texture.diffuseTexture = new BABYLON.Texture(hostPath + "/textures/bubble.png", scene);
+
 
     const urchin_texture = new BABYLON.StandardMaterial("urchin", scene);
     urchin_texture.diffuseTexture = new BABYLON.Texture(hostPath + "/textures/urchin.png", scene);

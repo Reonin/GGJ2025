@@ -24,9 +24,9 @@ export function init() {
     window.addEventListener(
         "click",
         () => {
-        if (!BABYLON.Engine.audioEngine.unlocked) {
-            BABYLON.Engine.audioEngine.unlock();
-        }
+            if (!BABYLON.Engine.audioEngine.unlocked) {
+                BABYLON.Engine.audioEngine.unlock();
+            }
         },
         { once: true },
     );
@@ -63,13 +63,6 @@ export function init() {
     const gameManager = new GameManager();
 
     let bubble;
-
-
-    let seed0;
-    let seed1;
-    let seed2;
-    let seed3;
-    let seed4;
 
     const createScene = async function () {
         // // Creates a basic Babylon Scene object
@@ -111,10 +104,8 @@ export function init() {
         setUpButtons(advancedTexture, buttonList);
         setUpHUD(advancedTexture, HUD);
         audioManager = new AudioManager(BABYLON, scene);
-        pointFactory = new PointFactory(BABYLON, scene, textureObj);
-        obstacleFactory = new ObstacleFactory(BABYLON, scene, textureObj);
-        pointFactory.createMesh();
-        obstacleFactory.createUrchin();
+       
+     
 
         audioManager.loadSounds();
 
@@ -143,44 +134,43 @@ export function init() {
         let collisionCooldown = 0;
         let score = 0;
 
-       setInterval(() => {
-        if (!isGameStarted) return;
+        setInterval(() => {
+            if (!isGameStarted) return;
 
-        collisionCooldown++;
+            collisionCooldown++;
 
-        if (collisionCooldown < 30) return; // Frame cooldown
+            if (collisionCooldown < 30) return; // Frame cooldown
 
-        scene.meshes.forEach((m) => {
-        if (bubble !== m && bubble.intersectsMesh(m, true) && m.name === 'germ' && m !== lastCollidedGerm) {
-           console.log("Collision detected between bubble and germ");
-           lastCollidedGerm = m;
-           collisionCooldown = 0;
-           score += 1;
-           HUD.player1Score.text = score;
-           m.dispose();
-          }
-       }, 100);
-    })
- 
-
+            scene.meshes.forEach((m) => {
+                if (bubble !== m && bubble.intersectsMesh(m, true) && m.name === 'germ' && m !== lastCollidedGerm) {
+                    console.log("Collision detected between bubble and germ");
+                    lastCollidedGerm = m;
+                    collisionCooldown = 0;
+                    score += 1;
+                    HUD.player1Score.text = score;
+                    m.dispose();
+                    audioManager.pingFX.play();
+                }
+                else if (bubble !== m && bubble.intersectsMesh(m, true) && m.name === 'obstacle' && m !== lastCollidedGerm) {
+                    console.log("Collision btwn bubble and obstacle");
+                    lastCollidedGerm = m;
+                    collisionCooldown = 0;
+                    HUD.player1Score.text = score;
+                    m.dispose();
+                    audioManager.popFX.play();
+                }
+            }, 100);
+        })
 
 
 
         bubble.material = textureObj.bubble_texture;
 
         // Function to handle microphone input
-
         handleMicrophoneInput(scene, bubble, audioManager);
 
-
-
-        const directionArr1 = [true, true, true];
-        const directionArr2 = [true, true, true];
-
-        let linesystem;
-        let linesystem2;
         // Code in this function will run ~60 times per second
-        scene.registerBeforeRender(() => {});
+        scene.registerBeforeRender(() => { });
 
         HUD.player1.meshes.forEach((element) => {
             element.material = textureObj.blue_mat;
@@ -192,8 +182,9 @@ export function init() {
             hideTitleScreen();
             gameManager.changeRound(1, HUD, true);
             isGameStarted = true;
+            pointFactory = new PointFactory(BABYLON, scene, textureObj);
+            obstacleFactory = new ObstacleFactory(BABYLON, scene, textureObj);
 
-            seed0 = scene.getMeshByName("seed0");
         });
 
         return scene;
@@ -213,11 +204,11 @@ export function init() {
                     case "A":
                     case "a":
                         console.log("KEY DOWN: ", kbInfo.event.key);
-                        seed0.position.x += 1;
-                    break;
+
+                        break;
                     case '`':
                         scene.debugLayer.show();
-                    break;
+                        break;
 
                 }
             }
@@ -227,6 +218,8 @@ export function init() {
     const hideTitleScreen = () => {
         HUD.title.isVisible = false;
         HUD.subtitle.isVisible = false;
+        HUD.scoreLabel1.isVisible = true;
+        HUD.player1Score.isVisible = true;
 
         buttonList.startGameButton.isVisible = false;
     };

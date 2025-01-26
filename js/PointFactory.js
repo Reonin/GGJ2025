@@ -23,7 +23,7 @@ export class PointFactory {
     checkAndDestroyStaleMeshes(){
         this.listOfPointsActive?.forEach((obj, index) => {
             //destroy if reaches arbitrary x end
-            if(obj.mesh.position.x > 12) {
+            if(obj.mesh.position.x > 15) {
                 obj.mesh.dispose();
                 this.listOfPointsActive.splice(index, 1);
             }

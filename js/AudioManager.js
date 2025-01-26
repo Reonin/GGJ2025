@@ -12,6 +12,7 @@ export class AudioManager {
     this.pingFX = new this.BABYLON.Sound("Ping", "./audio/ping.mp3", this.scene, null, {
       loop: false,
       autoplay: false,
+      volume: 0.5,
     });
 
     this.softFX = new this.BABYLON.Sound("snd", "./audio/snd_fragment.mp3", this.scene, null, {

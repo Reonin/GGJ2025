@@ -9,14 +9,15 @@ export class ObstacleFactory {
       this.listOfPointsActive = [];
       this.direction = true;
       this.scene.onBeforeRenderObservable.add(this.checkAndDestroyStaleMeshes.bind(this));
-      setInterval(this.createUrchin.bind(this), 3000);
+
+      setInterval( this.createUrchin.bind(this) , 3000);
     }
     createUrchin(){
-        // if(Math.random() > 0.99) { // experiment with delta time instead
+        if(Math.random() >= 0.5) { // experiment with delta time instead
             const urchin = new Obstacle(this.BABYLON, this.scene, this.textureObj);
             this.listOfPointsActive.push(urchin);
 
-        // }
+        }
     }
 
 
@@ -24,7 +25,7 @@ export class ObstacleFactory {
     checkAndDestroyStaleMeshes(){
         this.listOfPointsActive?.forEach((obj, index) => {
             //destroy if reaches arbitrary x end
-            if(obj.mesh.position.x > 12) {
+            if(obj.mesh.position.x > 15) {
                 obj.mesh.dispose();
                 this.listOfPointsActive.splice(index, 1);
             }
