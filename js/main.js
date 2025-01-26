@@ -32,6 +32,7 @@ export function init() {
     );
     let advancedTexture;
     let startGameButton;
+    let retry;
     let player1 = {};
     let correctAnswer;
     let currentRound = 0;
@@ -40,13 +41,17 @@ export function init() {
 
     const buttonList = {
         startGameButton,
+        retry,
     };
 
     let player1Score = {},
         scoreLabel1 = {},
         title = {},
         subtitle = {},
-        question = {};
+        question = {},
+        arrow = {},
+        intructions = {},
+        gameover = {};
 
     const HUD = {
         player1,
@@ -56,7 +61,9 @@ export function init() {
         title,
         subtitle,
         question,
-        currentRound,
+        arrow,
+        intructions,
+        gameover,
     };
 
     let textureObj;
@@ -133,10 +140,10 @@ export function init() {
         let lastCollidedGerm = null;
         let collisionCooldown = 0;
         let score = 0;
-
+        let isGameOver = false;
         setInterval(() => {
             if (!isGameStarted) return;
-
+            if(isGameOver) return;
             collisionCooldown++;
 
             if (collisionCooldown < 30) return; // Frame cooldown
@@ -155,26 +162,29 @@ export function init() {
                     console.log("Collision btwn bubble and obstacle");
                     lastCollidedGerm = m;
                     collisionCooldown = 0;
-                    HUD.player1Score.text = score;
-                    m.dispose();
+                    showGameOverScreen();
                     audioManager.popFX.play();
+                    isGameOver = true;
+                    bubble.isVisible = false;
                 }
+                
             }, 100);
         })
 
 
 
         bubble.material = textureObj.bubble_texture;
-
+       
         // Function to handle microphone input
         handleMicrophoneInput(scene, bubble, audioManager);
 
+        HUD.arrow.linkWithMesh(bubble);
         // Code in this function will run ~60 times per second
         scene.registerBeforeRender(() => { });
 
-        HUD.player1.meshes.forEach((element) => {
-            element.material = textureObj.blue_mat;
-        });
+        // HUD.player1.meshes.forEach((element) => {
+        //     element.material = textureObj.blue_mat;
+        // });
         HUD.player1Score.text = "0";
 
         buttonList.startGameButton.onPointerUpObservable.add(function () {
@@ -184,7 +194,12 @@ export function init() {
             isGameStarted = true;
             pointFactory = new PointFactory(BABYLON, scene, textureObj);
             obstacleFactory = new ObstacleFactory(BABYLON, scene, textureObj);
-
+            HUD.arrow.isVisible = false;
+            HUD.intructions.isVisible = false;
+        });
+    
+        buttonList.retry.onPointerUpObservable.add(function () {
+            window.location.reload();
         });
 
         return scene;
@@ -223,6 +238,11 @@ export function init() {
 
         buttonList.startGameButton.isVisible = false;
     };
+
+    const showGameOverScreen = () => {
+        HUD.gameover.isVisible = true;
+        buttonList.retry.isVisible = true;
+    }
 
     // Watch for browser/canvas resize events
     window.addEventListener("resize", function () {

@@ -4,4 +4,7 @@ export default function setUpHUD(advancedTexture, HUD){
     HUD.title = advancedTexture.getControlByName("Title");
     HUD.subtitle = advancedTexture.getControlByName("Subtitle");
     HUD.question = advancedTexture.getControlByName("Question");
+    HUD.arrow = advancedTexture.getControlByName("Arrow");
+    HUD.intructions = advancedTexture.getControlByName("Instructions");
+    HUD.gameover = advancedTexture.getControlByName("GameOver");
 }
