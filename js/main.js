@@ -161,9 +161,9 @@ export function init() {
         scene.registerBeforeRender(() => {
             const germs = pointFactory.getGerms()
             for(const germ of germs){
-                console.log(germs)
                 if (bubble.intersectsMesh(germ.mesh, false)) { // Check collision with the ground
                     console.log("Collision detected between bubble and germ");
+                    pointFactory.destroyGerm(germ)
                 }
             }
         });

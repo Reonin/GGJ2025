@@ -21,7 +21,6 @@ export class PointFactory {
     }
   
     
-
     checkAndDestroyStaleMeshes(){
         this.listOfPointsActive?.forEach((obj, index) => {
             //destroy if reaches arbitrary x end 
@@ -34,6 +33,10 @@ export class PointFactory {
 
     getGerms(){
         return this.listOfPointsActive
+    }
+
+    destroyGerm(obj){
+        obj.mesh.dispose();
     }
   
   }
