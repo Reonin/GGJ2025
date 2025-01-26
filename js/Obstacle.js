@@ -12,7 +12,7 @@ export class Obstacle {
         this.mesh.billboardMode = this.BABYLON.Mesh.BILLBOARDMODE_ALL;
         this.mesh.position.x = -15;
         this.mesh.position.y = 0;
-        this.mesh.position.z = 3;
+        this.mesh.position.z = 5;
         this.mesh.material = this.textureObj.urchin_texture;
         setInterval(this.positionObstacle.bind(this), 10);
     }
