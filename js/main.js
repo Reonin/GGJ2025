@@ -152,7 +152,10 @@ export function init() {
         let isGameOver = false;
         setInterval(() => {
             if (!isGameStarted) return;
-            if(isGameOver) return;
+            if(isGameOver) {
+                face.material = textureObj.surpriseface_texture;
+                return;
+            }
             collisionCooldown++;
 
             if (collisionCooldown < 30) return; // Frame cooldown
@@ -183,6 +186,7 @@ export function init() {
                     audioManager.popFX.play();
                     isGameOver = true;
                     bubble.isVisible = false;
+                    
                 }
             }, 100);
         })

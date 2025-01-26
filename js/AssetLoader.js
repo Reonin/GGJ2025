@@ -46,6 +46,11 @@ export default function loadAssets(BABYLON, scene) {
     happy_blow_texture.diffuseTexture = new BABYLON.Texture(hostPath + "/textures/happyface.webp", scene);
     happy_blow_texture.diffuseTexture.hasAlpha = true;
 
+    const surpriseface_texture = new BABYLON.StandardMaterial("face", scene);
+    surpriseface_texture.alpha = 1;
+    surpriseface_texture.diffuseTexture = new BABYLON.Texture(hostPath + "/textures/surpriseface.webp", scene);
+    surpriseface_texture.diffuseTexture.hasAlpha = true;
+    
 
     const urchin_texture = new BABYLON.StandardMaterial("urchin", scene);
     urchin_texture.diffuseTexture = new BABYLON.Texture(hostPath + "/textures/urchin.png", scene);
@@ -76,6 +81,6 @@ export default function loadAssets(BABYLON, scene) {
     hook_texture.diffuseTexture.hasAlpha = true;
     hook_texture.useAlphaFromDiffuseTexture = true;
 
-    const textureObj = { purple_mat, blue_mat, red_mat, brown_mat, soil_texture, germ_texture, bubble_texture, urchin_texture, shark_texture, hook_texture, oil_spill_texture, face_texture, face_blow_texture, happy_blow_texture};
+    const textureObj = { purple_mat, blue_mat, red_mat, brown_mat, soil_texture, germ_texture, bubble_texture, urchin_texture, shark_texture, hook_texture, oil_spill_texture, face_texture, face_blow_texture, happy_blow_texture, surpriseface_texture};
     return textureObj;
 }
