@@ -70,6 +70,7 @@ export function init() {
     const gameManager = new GameManager();
 
     let bubble;
+    let face;
 
     const createScene = async function () {
         // // Creates a basic Babylon Scene object
@@ -136,6 +137,12 @@ export function init() {
             bubble.rotation.z += 0.01;
         });
 
+        face = BABYLON.MeshBuilder.CreateDisc("face", { radius: 0.25 }, scene);
+        face.billboardMode = BABYLON.Mesh.BILLBOARDMODE_ALL;
+        face.position.y = 1;
+        face.rotation.z = Math.PI;
+        face.parent = bubble;
+
         // Enable collision for the bubble
         bubble.checkCollisions = true;
 
@@ -176,9 +183,9 @@ export function init() {
 
 
         bubble.material = textureObj.bubble_texture;
-
+        face.material = textureObj.face_texture;
         // Function to handle microphone input
-        handleMicrophoneInput(scene, bubble, audioManager);
+        handleMicrophoneInput(scene, bubble, audioManager, face, textureObj);
 
         HUD.arrow.linkWithMesh(bubble);
         // Code in this function will run ~60 times per second
@@ -221,7 +228,7 @@ export function init() {
                     case "A":
                     case "a":
                         console.log("KEY DOWN: ", kbInfo.event.key);
-
+                        // face.material = textureObj.happy_blow_texture;
                         break;
                     case '`':
                         scene.debugLayer.show();
