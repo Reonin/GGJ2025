@@ -55,7 +55,14 @@
         }
 
         let { init } = await import( hostPath + '/js/main.js');
+        const textElement = document.createElement('span');
+        textElement.style.fontFamily = 'Rubik Bubbles';
+        textElement.style.fontSize = '70px';
+        textElement.style.fontWeight = '400';
+        textElement.innerHTML = 'test';
+        document.body.appendChild(textElement);
 
+        
         init();
     </script>
 </body>

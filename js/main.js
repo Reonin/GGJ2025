@@ -168,12 +168,8 @@ export function init() {
                     HUD.player1Score.text = score;
                     m.dispose();
                     audioManager.pingFX.play();
-                } else if (
-                    bubble !== m &&
-                    bubble.intersectsMesh(m, true) &&
-                    (m.name === "urchin" || m.name === "shark") &&
-                    m !== lastCollidedGerm
-                ) {
+                }
+                else if (bubble !== m && bubble.intersectsMesh(m, true) && (m.name === 'urchin' || m.name === 'shark' || m.name === 'hook') && m !== lastCollidedGerm) {
                     lastCollidedGerm = m;
                     collisionCooldown = 0;
                     showGameOverScreen();
