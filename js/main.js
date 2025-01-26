@@ -160,7 +160,7 @@ export function init() {
                     m.dispose();
                     audioManager.pingFX.play();
                 }
-                else if (bubble !== m && bubble.intersectsMesh(m, true) && (m.name === 'urchin' || m.name === 'shark') && m !== lastCollidedGerm) {
+                else if (bubble !== m && bubble.intersectsMesh(m, true) && (m.name === 'urchin' || m.name === 'shark' || m.name === 'hook') && m !== lastCollidedGerm) {
                     console.log("Collision btwn bubble and obstacle");
                     lastCollidedGerm = m;
                     collisionCooldown = 0;
