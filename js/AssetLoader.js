@@ -39,6 +39,13 @@ export default function loadAssets(BABYLON, scene) {
     urchin_texture.diffuseTexture.hasAlpha = true;
     urchin_texture.useAlphaFromDiffuseTexture = true
 
-    const textureObj = { purple_mat, blue_mat, red_mat, brown_mat, soil_texture, germ_texture, bubble_texture, urchin_texture };
+    const shark_texture = new BABYLON.StandardMaterial("shark", scene);
+    shark_texture.diffuseTexture = new BABYLON.Texture(hostPath + "/textures/shark.png", scene);
+    //shark_texture.diffuseTexture.vScale = 1;
+    //shark_texture.diffuseTexture.uScale = -1;
+    shark_texture.diffuseTexture.hasAlpha = true;
+    shark_texture.useAlphaFromDiffuseTexture = true;
+
+    const textureObj = { purple_mat, blue_mat, red_mat, brown_mat, soil_texture, germ_texture, bubble_texture, urchin_texture, shark_texture};
     return textureObj;
 }

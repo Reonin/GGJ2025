@@ -80,7 +80,7 @@ export function init() {
             new BABYLON.Vector3(0, 15, 0),
             scene
         );
-        const cameraZoom  = 15; 
+        const cameraZoom  = 15;
         camera.mode = BABYLON.Camera.ORTHOGRAPHIC_CAMERA;
         camera.orthoTop = cameraZoom / 2 ;
         camera.orthoBottom = -cameraZoom / 2;
@@ -113,8 +113,8 @@ export function init() {
         setUpButtons(advancedTexture, buttonList);
         setUpHUD(advancedTexture, HUD);
         audioManager = new AudioManager(BABYLON, scene);
-       
-     
+
+
 
         audioManager.loadSounds();
 
@@ -160,7 +160,7 @@ export function init() {
                     m.dispose();
                     audioManager.pingFX.play();
                 }
-                else if (bubble !== m && bubble.intersectsMesh(m, true) && m.name === 'obstacle' && m !== lastCollidedGerm) {
+                else if (bubble !== m && bubble.intersectsMesh(m, true) && (m.name === 'urchin' || m.name === 'shark') && m !== lastCollidedGerm) {
                     console.log("Collision btwn bubble and obstacle");
                     lastCollidedGerm = m;
                     collisionCooldown = 0;
@@ -169,14 +169,14 @@ export function init() {
                     isGameOver = true;
                     bubble.isVisible = false;
                 }
-                
+
             }, 100);
         })
 
 
 
         bubble.material = textureObj.bubble_texture;
-       
+
         // Function to handle microphone input
         handleMicrophoneInput(scene, bubble, audioManager);
 
@@ -199,7 +199,7 @@ export function init() {
             HUD.arrow.isVisible = false;
             HUD.intructions.isVisible = false;
         });
-    
+
         buttonList.retry.onPointerUpObservable.add(function () {
             window.location.reload();
         });
