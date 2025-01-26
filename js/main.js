@@ -33,16 +33,16 @@ export function init() {
     let advancedTexture;
     let startGameButton;
     let player1 = {};
-    let player2 = {};
     let correctAnswer;
     let currentRound = 0;
+    let isGameStarted = false;
+
 
     const buttonList = {
         startGameButton,
     };
 
     let player1Score = {},
-        player2Score = {},
         scoreLabel1 = {},
         title = {},
         subtitle = {},
@@ -50,10 +50,8 @@ export function init() {
 
     const HUD = {
         player1,
-        player2,
         correctAnswer,
         player1Score,
-        player2Score,
         scoreLabel1,
         title,
         subtitle,
@@ -121,59 +119,53 @@ export function init() {
         audioManager.loadSounds();
 
         const assetsManager = new BABYLON.AssetsManager(scene);
-        const meshTask1 = assetsManager.addMeshTask(
-            "seed-0 task",
-            "",
-            "./models/",
-            "pistachio-0.glb"
-        );
 
         const background = ScrollingBackground(scene);
 
-        meshTask1.onSuccess = (task) => {
-            const seedMesh = task.loadedMeshes[0];
-            seedMesh.name = "seed0";
-            seedMesh.rotation = new BABYLON.Vector3(0, 0, 0);
-            seedMesh.rotation = new BABYLON.Vector3(-Math.PI / 2.2, 0, 0);
-            seedMesh.position.y = 1;
-            seedMesh.position.z = -0.25;
-            seedMesh.isVisible = false;
-        };
-
-        // Create the bubble (a sphere)
-        //const bubble = MeshBuilder.CreateSphere("bubble", { diameter: 1 }, scene);
 
         assetsManager.load();
 
         HUD.player1.meshes = [{}, {}, {}];
 
-        HUD.player2.meshes = [{}, {}, {}];
-
 
         bubble = BABYLON.MeshBuilder.CreateSphere("bubble", { diameter: .5 }, scene);
-        // Enable collision system for the scene
-        scene.collisionsEnabled = true;
+        bubble.position.x = 5;
+        scene.registerBeforeRender(() => {
+            bubble.rotation.x += 0.02;
+            bubble.rotation.y += 0.01;
+            bubble.rotation.z += 0.01;
+        });
 
         // Enable collision for the bubble
         bubble.checkCollisions = true;
 
-        // Optionally, set an ellipsoid to represent the collision volume (default is a sphere)
-        bubble.ellipsoid = new BABYLON.Vector3(0.25, 0.25, 0.25); // Adjust to fit the mesh size
-        bubble.ellipsoidOffset = new BABYLON.Vector3(0, 0.25, 0); // Offset the ellipsoid if needed
+        let lastCollidedGerm = null;
+        let collisionCooldown = 0;
+        let score = 0;
+
+       setInterval(() => {
+        if (!isGameStarted) return;
+
+        collisionCooldown++;
+
+        if (collisionCooldown < 30) return; // Frame cooldown
+
+        scene.meshes.forEach((m) => {
+        if (bubble !== m && bubble.intersectsMesh(m, true) && m.name === 'germ' && m !== lastCollidedGerm) {
+           console.log("Collision detected between bubble and germ");
+           lastCollidedGerm = m;
+           collisionCooldown = 0;
+           score += 1;
+           HUD.player1Score.text = score;
+           m.dispose();
+          }
+       }, 100);
+    })
+ 
 
 
-        scene.registerBeforeRender(() => {
-            const germs = pointFactory.getGerms()
-            for(const germ of germs){
-                if (bubble.intersectsMesh(germ.mesh, false)) { // Check collision with the ground
-                    console.log("Collision detected between bubble and germ");
-                    pointFactory.destroyGerm(germ)
-                }
-            }
-        });
 
 
-        
         bubble.material = textureObj.bubble_texture;
 
         // Function to handle microphone input
@@ -199,6 +191,7 @@ export function init() {
             updateScrollSpeed(background, 0.03);
             hideTitleScreen();
             gameManager.changeRound(1, HUD, true);
+            isGameStarted = true;
 
             seed0 = scene.getMeshByName("seed0");
         });

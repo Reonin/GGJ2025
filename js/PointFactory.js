@@ -31,12 +31,13 @@ export class PointFactory {
     }
 
     getGerms(){
+        console.log(`${this.listOfPointsActive.length}`);
         return this.listOfPointsActive
     }
 
     destroyGerm(obj){
         obj.mesh.dispose();
     }
-  
+
   }
 

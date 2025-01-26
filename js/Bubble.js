@@ -75,7 +75,7 @@ export default async function handleMicrophoneInput(scene, bubble, audioManager)
 
             previousScale = currentScale;
 
-            // console.log(`Pitch: ${pitch.toFixed(2)}, Scale: ${currentScale.toFixed(2)}`);
+            //console.log(`Pitch: ${pitch.toFixed(2)}, Scale: ${currentScale.toFixed(2)}`);
         }
 
         // Update bubble size on every frame
