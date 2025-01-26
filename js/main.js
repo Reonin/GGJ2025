@@ -92,10 +92,6 @@ export function init() {
         );
         // // Dim the light a small amount - 0 to 1
         // light.intensity = 0.5;
-
-        camera.attachControl(canvas, true);
-        camera.inputs.addMouseWheel();
-
         //GUI
         advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI(
             "GUI",
