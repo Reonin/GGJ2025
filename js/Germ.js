@@ -4,18 +4,19 @@ export class Germ {
       this.BABYLON = Babylon;
       this.scene = scene;
       this.textureObj = textureObj;
-      this.listOfPointsActive = [];  
+      this.listOfPointsActive = [];
       this.direction = true;
       this.directionX = Math.random() > 0.5 ? 1 : -1; // Random initial horizontal direction
       this.directionZ = Math.random() > 0.5 ? 1 : -1; // Random initial vertical direction
       this.speedX = Math.random() * 0.02 + 0.01; // Random horizontal speed
       this.speedZ = Math.random() * 0.02 + 0.01; //
 
-      
-      this.mesh = this.BABYLON.MeshBuilder.CreateSphere("germ" + crypto.randomUUID(), {diameter:.5, updatable: true}, scene);
+
+      this.mesh = this.BABYLON.MeshBuilder.CreateSphere("germ", {diameter:.5, updatable: true}, scene);
+
       this.mesh.billboardMode = this.BABYLON.Mesh.BILLBOARDMODE_ALL;
       this.mesh.position.x = -10; // Start on the right
-      this.mesh.position.y = 1.000;
+      //this.mesh.position.y = 1.000;
       this.mesh.position.z = 5;
       this.mesh.material = this.textureObj.germ_texture;
       this.mesh.position.z = this.randomizeStart(); // Randomized start along the z-axis      this.mesh.checkCollisions = true;
