@@ -25,7 +25,6 @@ export class ObstacleFactory {
     createShark(){
         if(Math.random() >= 0.5) { // experiment with delta time instead
             const shark = new Shark(this.BABYLON, this.scene, this.textureObj, {});
-            console.log(`Spawning shark at ${shark.mesh.position}`);
             this.listOfPointsActive.push(shark);
 
         }
@@ -34,7 +33,6 @@ export class ObstacleFactory {
     createHook(){
         if(Math.random() >= 0.5) { // experiment with delta time instead
             const hook = new Hook(this.BABYLON, this.scene, this.textureObj, {});
-            console.log(`Spawning hook at ${hook.mesh.position}`);
             this.listOfPointsActive.push(hook);
 
         }
