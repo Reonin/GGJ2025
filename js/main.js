@@ -83,7 +83,6 @@ export function init() {
         // Targets the camera to scene origin
         camera.setTarget(BABYLON.Vector3.Zero());
         // // This attaches the camera to the canvas
-        // // camera.attachControl(canvas, true);
         // // Creates a light, aiming 0,1,0 - to the sky
         const light = new BABYLON.HemisphericLight(
             "light",
@@ -93,8 +92,8 @@ export function init() {
         // // Dim the light a small amount - 0 to 1
         // light.intensity = 0.5;
 
-        camera.attachControl(canvas, true);
-        camera.inputs.addMouseWheel();
+        // camera.attachControl(canvas, true);
+        // camera.inputs.addMouseWheel();
 
         //GUI
         advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI(
