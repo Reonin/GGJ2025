@@ -10,10 +10,12 @@ import {
     updateScrollSpeed,
 } from "./InfiniteBackground.js";
 import { PointFactory } from './PointFactory.js';
+import { ObstacleFactory } from './ObstacleFactory.js';
 
 // import {changeRound, checkForCorrectAnswer} from './RoundSwap.js';
 let audioManager;
 let pointFactory;
+let obstacleFactory;
 export function init() {
     const canvas = document.getElementById("renderCanvas"); // Get the canvas element
     const engine = new BABYLON.Engine(canvas, true, { stencil: true }); // Generate the BABYLON 3D engine
@@ -112,7 +114,9 @@ export function init() {
         setUpHUD(advancedTexture, HUD);
         audioManager = new AudioManager(BABYLON, scene);
         pointFactory = new PointFactory(BABYLON, scene, textureObj);
+        obstacleFactory = new ObstacleFactory(BABYLON, scene, textureObj);
         pointFactory.createMesh();
+        obstacleFactory.createUrchin();
 
         audioManager.loadSounds();
 

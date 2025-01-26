@@ -1,6 +1,7 @@
-import { BUTTON_ANSWER_X, BUTTON_ANSWER_Y, MESH_START_Z } from './Constants.js';
-import { Germ } from './Germ.js';
-export class PointFactory {
+import { URCHIN_START_Z } from './Constants.js';
+import { Obstacle } from './Obstacle.js';
+
+export class ObstacleFactory {
     constructor(Babylon, scene, textureObj) {
       this.BABYLON = Babylon;
       this.scene = scene;
@@ -8,17 +9,17 @@ export class PointFactory {
       this.listOfPointsActive = [];
       this.direction = true;
       this.scene.onBeforeRenderObservable.add(this.checkAndDestroyStaleMeshes.bind(this));
-    //   this.scene.onAfterRenderObservable.add(this.createMesh.bind(this));
-    setInterval(this.createMesh.bind(this), 3000);
+      setInterval(this.createUrchin.bind(this), 3000);
     }
-
-    createMesh(){
+    createUrchin(){
         // if(Math.random() > 0.99) { // experiment with delta time instead
-            const germ = new Germ(this.BABYLON, this.scene, this.textureObj);
-            this.listOfPointsActive.push(germ);
+            const urchin = new Obstacle(this.BABYLON, this.scene, this.textureObj);
+            this.listOfPointsActive.push(urchin);
 
         // }
     }
+
+
 
     checkAndDestroyStaleMeshes(){
         this.listOfPointsActive?.forEach((obj, index) => {
@@ -29,14 +30,5 @@ export class PointFactory {
             }
         });
     }
-
-    getGerms(){
-        return this.listOfPointsActive
-    }
-
-    destroyGerm(obj){
-        obj.mesh.dispose();
-    }
-  
-  }
+}
 
