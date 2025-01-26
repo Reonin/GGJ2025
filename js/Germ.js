@@ -12,7 +12,7 @@ export class Germ {
       this.speedZ = Math.random() * 0.02 + 0.01; //
 
       
-      this.mesh = this.BABYLON.MeshBuilder.CreateDisc("germ", { diameter: 2 }, this.scene);
+      this.mesh = this.BABYLON.MeshBuilder.CreateSphere("sphere", {diameter:.5, updatable: true}, scene);
       this.mesh.billboardMode = this.BABYLON.Mesh.BILLBOARDMODE_ALL;
       this.mesh.position.x = -10; // Start on the right
       this.mesh.position.y = 1.000;
