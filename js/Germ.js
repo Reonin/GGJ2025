@@ -7,6 +7,7 @@ export class Germ {
       this.listOfPointsActive = [];  
       this.direction = true;
 
+      
       this.mesh = this.BABYLON.MeshBuilder.CreateDisc("germ", { diameter: 2 }, this.scene);
       this.mesh.billboardMode = this.BABYLON.Mesh.BILLBOARDMODE_ALL;
       this.mesh.position.x = -10;
@@ -14,6 +15,7 @@ export class Germ {
       this.mesh.position.z = 5;
       this.mesh.material = this.textureObj.germ_texture;
       this.mesh.rotation.z = 180;
+      this.mesh.checkCollisions = true;
       this.startPosition = this.randomizeStart();
       setInterval(this.positionMesh.bind(this), 10);
     }
