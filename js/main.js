@@ -46,7 +46,9 @@ export function init() {
         scoreLabel1 = {},
         title = {},
         subtitle = {},
-        question = {};
+        question = {},
+        arrow = {},
+        intructions = {};
 
     const HUD = {
         player1,
@@ -56,7 +58,8 @@ export function init() {
         title,
         subtitle,
         question,
-        currentRound,
+        arrow,
+        intructions,
     };
 
     let textureObj;
@@ -165,16 +168,17 @@ export function init() {
 
 
         bubble.material = textureObj.bubble_texture;
-
+       
         // Function to handle microphone input
         handleMicrophoneInput(scene, bubble, audioManager);
-
+        
+        HUD.arrow.linkWithMesh(bubble);
         // Code in this function will run ~60 times per second
         scene.registerBeforeRender(() => { });
 
-        HUD.player1.meshes.forEach((element) => {
-            element.material = textureObj.blue_mat;
-        });
+        // HUD.player1.meshes.forEach((element) => {
+        //     element.material = textureObj.blue_mat;
+        // });
         HUD.player1Score.text = "0";
 
         buttonList.startGameButton.onPointerUpObservable.add(function () {
@@ -184,7 +188,8 @@ export function init() {
             isGameStarted = true;
             pointFactory = new PointFactory(BABYLON, scene, textureObj);
             obstacleFactory = new ObstacleFactory(BABYLON, scene, textureObj);
-
+            HUD.arrow.isVisible = false;
+            HUD.intructions.isVisible = false;
         });
 
         return scene;
